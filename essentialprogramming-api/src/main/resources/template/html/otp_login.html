@@ -1,0 +1,40 @@
+<div th:fragment="otp_login" xmlns:th="http://www.thymeleaf.org">
+
+    <br />
+    <strong th:text="#{otp_login.hello.message}"></strong>
+    
+    <strong>
+        <!--/*@thymesVar id="fullName" type="java.lang.String"*/-->
+        <span th:text="${fullName}"></span>
+    </strong>,
+    <br />
+	<br />
+    <span th:text="#{otp_login.request}"></span>
+    <br />
+    <br />
+    <span th:text="#{otp_login.ignore.message}"></span>
+    <br />
+    <br />
+
+    <div style="text-align: center;">
+       
+        <!--/*@thymesVar id="link" type=""*/-->
+        <a href="#" th:href="${link}" th:text="#{otp_login.set.password}" target="_other" rel="nofollow"
+           style="
+               background: #3498db;
+               color: #ffffff;
+               text-align: center;
+               text-decoration: none;
+               padding: 10px;
+               display: inline-block;
+               border-radius: 5px;  ">
+        </a>
+    </div>
+
+    <br />
+    <br />
+
+    <span th:text="#{email.sincerely}"></span>
+    <br/>
+    <span th:text="#{email.regards}"></span>
+</div>

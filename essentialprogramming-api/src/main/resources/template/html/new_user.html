@@ -1,0 +1,48 @@
+<div th:fragment="new_user" xmlns:th="http://www.thymeleaf.org">
+    <br/>
+
+    <strong th:text="#{new_user.greetings}"></strong>
+    <!--/*@thymesVar id="fullName" type="java.lang.String"*/-->
+    <strong th:text="${fullName}"></strong>
+    <span>, </span>
+    <br/>
+    <br/>
+    <span th:text="#{new_user.thank.you}"></span>
+    <br/>
+    <br/>
+    <div style="text-align: center;">
+
+        <!--/*@thymesVar id="confirmationLink" type="java.lang.String"*/-->
+        <a href="#" th:href="${confirmationLink}" th:text="#{new_user.confirm.account}" target="_other" rel="nofollow"
+           style="
+               background: #3498db;
+               color: #ffffff;
+               text-align: center;
+               text-decoration: none;
+               padding: 10px;
+               display: inline-block;
+               border-radius: 5px;  ">
+        </a>
+    </div>
+
+    <br/>
+    <br/>
+
+    <span th:text="#{new_user.after.activation}"></span>
+    <div style="margin-left:35px;">
+        <br/>
+        <span th:text="#{new_user.action}"></span>
+        <br/>
+        <br/>
+        <span th:text="#{new_user.fun}"></span>
+        <br/>
+        <br/>
+        <span th:text="#{new_user.enjoy}"></span>
+    </div>
+    <br/>
+    <br/>
+
+    <span th:text="#{email.sincerely}"></span>
+    <br/>
+    <span th:text="#{email.regards}"></span>
+</div>

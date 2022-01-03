@@ -1,0 +1,28 @@
+{
+  "name": "webpack-babel-for-es6",
+  "version": "1.0.0",
+  "description": "Use of webpack with babel for compiling and bundling js files",
+  "main": "main.js",
+  "scripts": {
+    "build": "webpack -p ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Razvan Prichici",
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "i18next": "^19.7.0",
+    "i18next-loader": "0.0.6",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.8"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^3.0.0",
+    "regenerator-runtime": "^0.13.7"
+  }
+}

@@ -1,0 +1,11 @@
+<script>
+
+    async function start() {
+        window.location = `quiz?name=stranger`;
+    }
+
+    start()
+        .then(() => console.log("Application started"))
+        .catch(error => console.log("Application not started, due to " + error))
+
+</script>

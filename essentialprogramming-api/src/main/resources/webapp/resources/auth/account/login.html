@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Login </title>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../../auth/account/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<div class="login-form">
+    <form id="loginForm" onsubmit="login(event)">
+        <h2 class="text-center">Welcome</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Username" required="required" name="email">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password" required="required" name="password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">LOGIN</button>
+        </div>
+        <span id="error"/>
+    </form>
+
+</div>
+
+
+<script>
+
+    function getRequestParameter(parameterName){
+        if(parameterName = (new RegExp('[?&]' + encodeURIComponent(parameterName) + '=([^&]*)')).exec(location.search))
+            return decodeURIComponent(parameterName[1]);
+    }
+
+    function login(event) {
+
+        event.preventDefault();
+        const form = document.getElementById('loginForm');
+        let rawData = new FormData(form);
+
+        let data = {};
+        for(let pair of rawData.entries()) {
+            data[pair[0]] = pair[1];
+        }
+
+        console.log(data);
+        let contactData = JSON.stringify(data);
+        let redirectUri = getRequestParameter("redirect_uri");
+        let loginPromise = new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '/api/auth/authenticate?redirect_uri=' + redirectUri);
+              xhr.setRequestHeader('Content-Type', 'application/json');
+              xhr.onload = (response) => resolve(response.currentTarget.responseText);
+              xhr.onerror = () => reject(xhr.statusText);
+              xhr.send(contactData);
+    });
+
+        loginPromise
+            .then(responseText => {
+               let json = JSON.parse(responseText);
+               if (json.status !== "Error"){
+                 window.location.replace(json.redirectUrl);
+             } else{
+                 document.getElementById("error").innerHTML = json.error;
+             }
+    })
+    .catch(function(error) {
+            console.log(error);
+        });
+
+    }
+
+
+</script>
+
+
+</body>
+</html>
