@@ -92,9 +92,9 @@ public class PasswordGenerator {
                 final Character character = chars.get(index);
                 if (frequencyMap.get(character) > 1) {
                     Character generated = generateRandomChar(random, options.isAlphanumericOnly(), options.excludeAmbiguousCharacters(), chars);
-                    while (chars.contains(generated)) {
-                        generated = generateRandomChar(random, options.isAlphanumericOnly(), options.excludeAmbiguousCharacters());
-                    }
+//                    while (chars.contains(generated)) {
+//                        generated = generateRandomChar(random, options.isAlphanumericOnly(), options.excludeAmbiguousCharacters());
+//                    }
                     //frequencyMap.merge(character, 1L, (oldValue, value) -> oldValue - 1);
                     frequencyMap.computeIfPresent(character, (k, v) -> v - 1);
                     chars.set(index, generated);
@@ -130,10 +130,37 @@ public class PasswordGenerator {
     }
 
     private static Character randomChar(Random random, String alphabet, boolean excludeAmbiguousCharacters, List<Character> charactersToExclude) {
-        final String characters = excludeAmbiguousCharacters ? alphabet.replaceAll("[" + AMBIGUOUS_CHARS + "]", "") : alphabet;
+        String characters = excludeAmbiguousCharacters ? alphabet.replaceAll("[" + AMBIGUOUS_CHARS + "]", "") : alphabet;
+
+        characters = excludeCharacters(characters, charactersToExclude);
 
         int randomIndex = random.nextInt(characters.length());
         return characters.charAt(randomIndex);
+    }
+
+    private static String excludeCharacters(final String input, final List<Character> charactersToExclude ) {
+
+        List<Character> inputCharsList = new ArrayList<>();
+        // For each character in the input add it to the inputCharsList
+        for (char ch : input.toCharArray()) {
+            inputCharsList.add(ch);
+        }
+
+        //remove from inputCharsList all characters from list charactersToExclude
+        for (Character ch : charactersToExclude) {
+            inputCharsList.remove(ch);
+        }
+
+        // create object of StringBuilder class
+         StringBuilder inputCharsListToString = new StringBuilder();
+
+        // Appends characters one by one to inputCharsListToString
+        for (Character ch : inputCharsList) {
+            inputCharsListToString.append(ch);
+        }
+
+        // convert inputCharsListToString in string
+        return inputCharsListToString.toString();
     }
 
     public static <T> Builder<T> builder() {
