@@ -92,9 +92,6 @@ public class PasswordGenerator {
                 final Character character = chars.get(index);
                 if (frequencyMap.get(character) > 1) {
                     Character generated = generateRandomChar(random, options.isAlphanumericOnly(), options.excludeAmbiguousCharacters(), chars);
-//                    while (chars.contains(generated)) {
-//                        generated = generateRandomChar(random, options.isAlphanumericOnly(), options.excludeAmbiguousCharacters());
-//                    }
                     //frequencyMap.merge(character, 1L, (oldValue, value) -> oldValue - 1);
                     frequencyMap.computeIfPresent(character, (k, v) -> v - 1);
                     chars.set(index, generated);
@@ -114,7 +111,7 @@ public class PasswordGenerator {
     }
 
     private static Character generateRandomChar(Random random, boolean alphanumericOnly, boolean excludeAmbiguousCharacters) {
-        return generateRandomChar(random, alphanumericOnly, excludeAmbiguousCharacters, null);
+        return generateRandomChar(random, alphanumericOnly, excludeAmbiguousCharacters, new ArrayList<>());
     }
 
     private static Character generateRandomChar(Random random, boolean alphanumericOnly, boolean excludeAmbiguousCharacters, List<Character> charactersToExclude) {
@@ -126,7 +123,7 @@ public class PasswordGenerator {
     }
 
     private static Character randomChar(Random random, String alphabet, boolean excludeAmbiguousCharacters) {
-        return randomChar(random, alphabet, excludeAmbiguousCharacters, null);
+        return randomChar(random, alphabet, excludeAmbiguousCharacters, new ArrayList<>());
     }
 
     private static Character randomChar(Random random, String alphabet, boolean excludeAmbiguousCharacters, List<Character> charactersToExclude) {
