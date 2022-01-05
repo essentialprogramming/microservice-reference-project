@@ -136,16 +136,16 @@ public class PasswordGenerator {
     }
 
     private static String excludeCharacters(final String input, final List<Character> charactersToExclude ) {
-        List<Character> inputList = input.chars()
-                .mapToObj(e->(char)e).collect(Collectors.toList());
+        List<Character> inputList = input.chars().mapToObj(e->(char)e).collect(Collectors.toList());
 
         inputList.removeAll(charactersToExclude);
 
+        return inputList.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+        /*
         StringBuilder inputCharsListToString = new StringBuilder();
-
         inputList.forEach(inputCharsListToString::append);
-
          return inputCharsListToString.toString();
+         */
     }
 
     public static <T> Builder<T> builder() {
