@@ -7,7 +7,6 @@ import java.nio.CharBuffer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Creates passwords that meet required options.
@@ -137,13 +136,8 @@ public class PasswordGenerator {
     }
 
     private static String excludeCharacters(final String input, final List<Character> charactersToExclude ) {
-        Character[] inputArray = new Character[input.length()];
-        for (int i = 0; i < input.length(); i++) {
-            inputArray[i] = input.charAt(i);
-        }
-        Stream<Character> inputStream = Arrays.stream(inputArray);
-
-        List<Character> inputList = inputStream.collect(Collectors.toList());
+        List<Character> inputList = input.chars()
+                .mapToObj(e->(char)e).collect(Collectors.toList());
 
         inputList.removeAll(charactersToExclude);
 
