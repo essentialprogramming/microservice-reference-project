@@ -7,6 +7,7 @@ import java.nio.CharBuffer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Creates passwords that meet required options.
@@ -136,28 +137,21 @@ public class PasswordGenerator {
     }
 
     private static String excludeCharacters(final String input, final List<Character> charactersToExclude ) {
-
-        List<Character> inputCharsList = new ArrayList<>();
-        // For each character in the input add it to the inputCharsList
-        for (char ch : input.toCharArray()) {
-            inputCharsList.add(ch);
+        Character[] inputArray = new Character[input.length()];
+        for (int i = 0; i < input.length(); i++) {
+            inputArray[i] = input.charAt(i);
         }
+        Stream<Character> inputStream = Arrays.stream(inputArray);
 
-        //remove from inputCharsList all characters from list charactersToExclude
-        for (Character ch : charactersToExclude) {
-            inputCharsList.remove(ch);
-        }
+        List<Character> inputList = inputStream.collect(Collectors.toList());
 
-        // create object of StringBuilder class
-         StringBuilder inputCharsListToString = new StringBuilder();
+        inputList.removeAll(charactersToExclude);
 
-        // Appends characters one by one to inputCharsListToString
-        for (Character ch : inputCharsList) {
-            inputCharsListToString.append(ch);
-        }
+        StringBuilder inputCharsListToString = new StringBuilder();
 
-        // convert inputCharsListToString in string
-        return inputCharsListToString.toString();
+        inputList.forEach(inputCharsListToString::append);
+
+         return inputCharsListToString.toString();
     }
 
     public static <T> Builder<T> builder() {
