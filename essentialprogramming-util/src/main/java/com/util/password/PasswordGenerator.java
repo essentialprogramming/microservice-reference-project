@@ -1,5 +1,6 @@
 package com.util.password;
 
+import com.util.collection.CollectionUtils;
 import com.util.random.XORShiftRandom;
 
 import java.nio.Buffer;
@@ -19,6 +20,9 @@ public class PasswordGenerator {
     public static final String SYMBOLS = "@%+\\/'!#$^?:,(){}[]~-_.";
     public static final String AMBIGUOUS_CHARS = "0oOiIl1";
 
+    public static final List<Character> AMBIGUOUS_CHARS_LIST = Collections
+            .unmodifiableList(Arrays.asList('0', 'o', 'O', 'i', 'I', 'l', '1'));
+    private static final String ALL_CHARS = UPPERCASE_LETTERS + LOWERCASE_LETTERS + DIGITS;
     private static final String[] CHARACTER_SETS = new String[]{UPPERCASE_LETTERS, LOWERCASE_LETTERS, DIGITS, SYMBOLS};
 
     /**
@@ -36,7 +40,7 @@ public class PasswordGenerator {
         validatePasswordOptions(options);
     }
 
-    private static void validatePasswordOptions(final PasswordOptions options){
+    private static void validatePasswordOptions(final PasswordOptions options) {
         final int count = Boolean.compare(options.isRequiredUppercase(), Boolean.FALSE) + Boolean.compare(options.isRequiredLowercase(), Boolean.FALSE) + Boolean.compare(options.isRequiredDigit(), Boolean.FALSE) + Boolean.compare(options.isRequireNonAlphanumeric(), Boolean.FALSE);
         if (count > options.getRequiredLength())
             throw new IllegalArgumentException("Current length cannot satisfy all required conditions");
@@ -92,6 +96,7 @@ public class PasswordGenerator {
                 final Character character = chars.get(index);
                 if (frequencyMap.get(character) > 1) {
                     Character generated = generateRandomChar(random, options.isAlphanumericOnly(), options.excludeAmbiguousCharacters(), chars);
+
                     //frequencyMap.merge(character, 1L, (oldValue, value) -> oldValue - 1);
                     frequencyMap.computeIfPresent(character, (k, v) -> v - 1);
                     chars.set(index, generated);
@@ -111,41 +116,48 @@ public class PasswordGenerator {
     }
 
     private static Character generateRandomChar(Random random, boolean alphanumericOnly, boolean excludeAmbiguousCharacters) {
-        return generateRandomChar(random, alphanumericOnly, excludeAmbiguousCharacters, new ArrayList<>());
+        return generateRandomChar(random, alphanumericOnly, excludeAmbiguousCharacters, Collections.emptyList());
     }
 
     private static Character generateRandomChar(Random random, boolean alphanumericOnly, boolean excludeAmbiguousCharacters, List<Character> charactersToExclude) {
         final int length = CHARACTER_SETS.length - 1;
         int randomCharSetMaxIndex = alphanumericOnly ? length - 1 : length;
 
+        if (excludeAmbiguousCharacters) {
+            charactersToExclude = CollectionUtils.concat(charactersToExclude, AMBIGUOUS_CHARS_LIST);
+        }
         String characters = CHARACTER_SETS[random.nextInt(randomCharSetMaxIndex)];
-        return randomChar(random, characters, excludeAmbiguousCharacters, charactersToExclude);
+        characters = excludeCharacters(characters, charactersToExclude);
+
+
+        if (characters.length() == 0) {
+            characters = excludeCharacters(ALL_CHARS, charactersToExclude);
+        }
+        return randomChar(random, characters, false); //excludeAmbiguousCharacters is always false because ambiguous characters have already been removed in this method
     }
+
 
     private static Character randomChar(Random random, String alphabet, boolean excludeAmbiguousCharacters) {
-        return randomChar(random, alphabet, excludeAmbiguousCharacters, new ArrayList<>());
-    }
-
-    private static Character randomChar(Random random, String alphabet, boolean excludeAmbiguousCharacters, List<Character> charactersToExclude) {
-        String characters = excludeAmbiguousCharacters ? alphabet.replaceAll("[" + AMBIGUOUS_CHARS + "]", "") : alphabet;
-
-        characters = excludeCharacters(characters, charactersToExclude);
+        final String characters = excludeAmbiguousCharacters ? alphabet.replaceAll("[" + AMBIGUOUS_CHARS + "]", "") : alphabet;
 
         int randomIndex = random.nextInt(characters.length());
         return characters.charAt(randomIndex);
     }
 
-    private static String excludeCharacters(final String input, final List<Character> charactersToExclude ) {
-        List<Character> inputList = input.chars().mapToObj(e->(char)e).collect(Collectors.toList());
-
+    private static String excludeCharacters(final String input, final List<Character> charactersToExclude) {
+        if (charactersToExclude.size() == 0) {
+            return input;
+        }
+        final List<Character> inputList = input.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
         inputList.removeAll(charactersToExclude);
 
-        return inputList.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
         /*
         StringBuilder inputCharsListToString = new StringBuilder();
         inputList.forEach(inputCharsListToString::append);
-         return inputCharsListToString.toString();
+        return inputCharsListToString.toString();
          */
+        return inputList.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+
     }
 
     public static <T> Builder<T> builder() {
