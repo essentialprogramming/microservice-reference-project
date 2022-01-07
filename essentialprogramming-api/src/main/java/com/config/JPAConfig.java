@@ -36,7 +36,7 @@ public class JPAConfig {
         config.setIdleTimeout(600000);
         config.setValidationTimeout(TimeUnit.SECONDS.toMillis(2));
         config.setMaxLifetime(1800000);
-        config.setDriverClassName(com.mysql.cj.jdbc.Driver.class.getName());
+        config.setDriverClassName(org.postgresql.Driver.class.getName());
 
         config.setJdbcUrl(AppResources.DB_HOSTNAME.value());
         config.setUsername(AppResources.DB_USER.value());
