@@ -16,12 +16,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependencies>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.26</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.3.1</version>
         </dependency>
     </dependencies>
 
@@ -33,25 +32,25 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.15.0</version>
                 <configuration>
-                    <url>jdbc:mysql://157.230.97.107:3306</url>
-                    <user>root</user>
-                    <password>a9317d93e62f8749f242f25cca1b0126dda06df4323f476f</password>
+                    <url>jdbc:postgresql://46.101.102.44/micro_service_reference_project</url>
+                    <user>postgres</user>
+                    <password>essentialprogramming</password>
                     <schemas>
-                        <schema>microreferenceproject</schema>
+                        <schema>public</schema>
                     </schemas>
                     <!-- <baselineOnMigrate>true</baselineOnMigrate>-->
 
                     <locations>
                         <!-- migrate scripts for every environment -->
                         <location>filesystem:src/main/resources/db</location>
-                    </locations>
 
+                    </locations>
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.26</version>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.3.0</version>
                     </dependency>
                 </dependencies>
 
