@@ -16,11 +16,11 @@ Build
 * Run: mvn clean install
 
 
-Run - Start the Server
+Run
 ---------------
 #### 1. Using IntelliJ
-Run application using "Server" Run `Server.main()` dialog:
-- Main Application class is `com.server.Server`
+Start the Server using  " Run `Server.main()` " command, selected from the dialog after right click on:
+- Main Application class: `com.server.Server`
 
 #### 2. Using CLI
 To run the application from command line do following steps
@@ -33,5 +33,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 
 ---------------
 ### 🌀 DB Migration
+- change directory to 'db-migration'
+- run
 `mvn compile flyway:baseline; `
 `mvn compile flyway:migrate; `
