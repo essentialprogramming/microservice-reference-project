@@ -64,7 +64,7 @@ public class JwtClaims extends LinkedHashMap<String, Object> {
         return containsKey(Claims.ROLES.getValue()) ? (String) get(Claims.ROLES.getValue()) : "";
     }
 
-
+    @SuppressWarnings("unchecked")
     public List<String> getPermissions() {
         return containsKey(Claims.PERMISSIONS.getValue()) ? (List<String>) get(Claims.PERMISSIONS.getValue()) : Collections.emptyList();
     }

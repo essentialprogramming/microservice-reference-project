@@ -10,7 +10,6 @@ import com.token.validation.jwt.JwtUtil;
 import com.token.validation.jwt.exception.TokenValidationException;
 import com.token.validation.response.ValidationResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
 import javax.annotation.security.RolesAllowed;

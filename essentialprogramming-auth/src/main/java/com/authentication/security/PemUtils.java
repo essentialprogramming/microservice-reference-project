@@ -5,6 +5,7 @@ import com.util.exceptions.ServiceException;
 import com.util.io.FileInputResource;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -72,12 +73,12 @@ public class PemUtils {
 
     public static PublicKey readPublicKeyFromPEMFile(String pemFile) throws IOException {
         byte[] bytes = PemUtils.parsePEMFile(pemFile);
-        return PemUtils.getPublicKey(new String(bytes));
+        return PemUtils.getPublicKey(new String(bytes, StandardCharsets.UTF_8));
     }
 
     public static PrivateKey readPrivateKeyFromPEMFile(String pemFile) throws IOException {
         byte[] bytes = PemUtils.parsePEMFile(pemFile);
-        return PemUtils.getPrivateKey(new String(bytes));
+        return PemUtils.getPrivateKey(new String(bytes, StandardCharsets.UTF_8));
     }
 
     private static String sanitizePublicPEM(String publicKeyContent) {

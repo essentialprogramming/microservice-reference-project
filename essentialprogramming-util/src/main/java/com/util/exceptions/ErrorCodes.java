@@ -9,7 +9,14 @@ public class ErrorCodes {
 
     public interface ErrorCode {
 
+        /**
+         * Get the error code.
+         */
         long getCode();
+
+        /**
+         * Get the error description.
+         */
         String getDescription();
 
     }

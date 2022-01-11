@@ -44,6 +44,7 @@ public class UserController {
 
     private final UserService userService;
 
+
     @Context
     private Language language;
 
@@ -90,7 +91,7 @@ public class UserController {
                                     schema = @Schema(implementation = UserJSON.class)))
             })
     @RolesAllowed({"visitor", "administrator"})
-    @AllowUserIf("hasAuthority('PERMISSION_do:anything') OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
+    @AllowUserIf("hasAnyRole(@privilegeService.getPrivilegeRoles(\"LOAD.USER\")) OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
     public void load(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
 
         final String bearer = AuthUtils.extractBearerToken(authorization);

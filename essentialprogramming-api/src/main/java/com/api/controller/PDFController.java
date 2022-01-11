@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.jboss.weld.util.collections.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.Consumes;
@@ -28,7 +30,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
@@ -36,6 +37,7 @@ import java.util.concurrent.ExecutorService;
 
 @Tag(description = "Pdf API", name = "Download PDF")
 @Path("/")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PDFController {
 
     @Context
@@ -43,10 +45,6 @@ public class PDFController {
 
     private final TemplateService templateService;
 
-    @Autowired
-    public PDFController(TemplateService templateService) {
-        this.templateService = templateService;
-    }
 
     @POST
     @Path("/pdf")
@@ -75,7 +73,6 @@ public class PDFController {
     }
 
     private Serializable generatePDF() throws ApiException {
-        final Map<String, Object> templateVariables = new HashMap<>();
 
         final User firstUser = new User();
         firstUser.setFirstName("Razvan");
@@ -94,7 +91,9 @@ public class PDFController {
         users.add(firstUser);
         users.add(secondUser);
 
-        templateVariables.put("users", users);
+        Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
+                .put("users", users)
+                .build();
         return templateService.generatePDF(Templates.PDF_EXAMPLE, templateVariables, language.getLocale());
     }
 

@@ -6,22 +6,21 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * 
  * Example Usage:
- * 
+ * <p>
  * return new JsonResponse()
- *     .with("status", "ok")
- *     .with("shouldRefresh", true)
- *     .done();
- * 
+ * .with("status", "ok")
+ * .with("shouldRefresh", true)
+ * .done();
  */
-public class JsonResponse extends LinkedHashMap<String, Object>{
+public class JsonResponse extends LinkedHashMap<String, Object> {
+    public static final long serialVersionUID = 1;
 
- 
-    public JsonResponse() {}
-    
+    public JsonResponse() {
+    }
+
     public JsonResponse with(String key, Object value) {
-    	this.putIfAbsent(key, value);
+        this.putIfAbsent(key, value);
         return this;
     }
 
@@ -29,13 +28,13 @@ public class JsonResponse extends LinkedHashMap<String, Object>{
         this.putIfAbsent(key, value);
         return this;
     }
-    
+
     public JsonResponse done() {
         try {
             new ObjectMapper().writeValueAsString(this);
             return this;
         } catch (Exception e) {
-        	return new JsonResponse().with("Error", "Well, this is embarrassing, we are having trouble generating the response for you !");
+            return new JsonResponse().with("Error", "Well, this is embarrassing, we are having trouble generating the response for you !");
         }
     }
 
