@@ -15,6 +15,7 @@ import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
+import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,10 @@ public class UserService {
 
         String url = AppResources.ACCOUNT_CONFIRMATION_URL.value() + "/" + validationKey + "/" + encryptedUserKey;
 
-        Map<String, Object> templateVariables = new HashMap<>();
-        templateVariables.put("fullName", result.getFullName());
-        templateVariables.put("confirmationLink", url);
+        Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
+                .put("fullName", result.getFullName())
+                .put("confirmationLink", url)
+                .build();
         emailManager.send(result.getEmail(), EmailMessages.get("new_user.subject", language.getLocale()), Templates.NEW_USER, templateVariables, language.getLocale());
 
         return UserMapper.userToJson(result);

@@ -2,6 +2,7 @@ package com.util.password;
 
 
 public class PasswordException extends Exception {
+    public static final long serialVersionUID = 1;
 
     private final PasswordStrength passwordStrength;
 

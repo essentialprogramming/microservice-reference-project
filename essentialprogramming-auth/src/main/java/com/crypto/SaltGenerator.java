@@ -3,6 +3,7 @@ package com.crypto;
 
 import java.security.SecureRandom;
 
+@SuppressWarnings("unused")
 public class SaltGenerator {
 
     private final SecureRandom random;

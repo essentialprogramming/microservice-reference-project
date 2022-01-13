@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 public class SessionUtils {
 
+    @SuppressWarnings("unchecked")
     public static <T> T getAttribute(HttpServletRequest request, String attributeName) {
         T ret = null;
         val session = getSession(request);
@@ -22,10 +23,9 @@ public class SessionUtils {
 
     /**
      *
-     * @param request
-     * @param attributeName
-     * @param value
-     * @return
+     * @param request http request
+     * @param attributeName attribute name
+     * @param value attribute value
      */
     public static void setAttribute(HttpServletRequest request, String attributeName, Object value) {
         val session = getSession(request);
@@ -37,11 +37,7 @@ public class SessionUtils {
         }
     }
 
-    /**
-     *
-     * @param request
-     * @return
-     */
+
     private static Object getMutex(HttpServletRequest request) {
         val session = getSession(request);
 

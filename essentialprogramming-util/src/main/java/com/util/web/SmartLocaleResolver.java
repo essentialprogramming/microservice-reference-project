@@ -27,7 +27,7 @@ public class SmartLocaleResolver {
 
     public static Locale resolveLocale(HttpHeaders headers) {
         Locale defaultLanguage;
-        List<Locale> locales = null;
+        List<Locale> locales;
         try {
             locales = headers.getAcceptableLanguages();
             defaultLanguage = locales.get(0);

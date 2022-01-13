@@ -1,6 +1,5 @@
 package com.exception;
 
-import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
 import com.util.web.JsonResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -15,7 +14,7 @@ public class ExceptionHandler {
 
     @FunctionalInterface
     interface Strategy<T> {
-        Response getValue(T exception);
+        Response getResponse(T exception);
     }
 
     private final static Strategy<ApiException> apiExceptionStrategy = (exception) -> {
@@ -65,10 +64,11 @@ public class ExceptionHandler {
         strategiesMap.put(HttpClientErrorException.class, httpClientErrorException);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static Response handleException(CompletionException completionException) {
 
         Strategy strategy = strategiesMap.getOrDefault(completionException.getCause().getClass(), defaultStrategy);
-        return strategy.getValue(completionException.getCause());
+        return strategy.getResponse(completionException.getCause());
     }
 
 }

@@ -11,6 +11,8 @@ import java.util.Random;
  *
  */
 public class XORShiftRandom extends Random {
+    public static final long serialVersionUID = 1;
+
 
     private long seed;
 
@@ -67,5 +69,9 @@ public class XORShiftRandom extends Random {
         } catch (Exception exception) {
             return seed;
         }
+    }
+
+    public static XORShiftRandom instance(){
+        return new XORShiftRandom();
     }
 }

@@ -5,6 +5,8 @@ import com.token.validation.jwt.JwtClaims;
 import com.token.validation.jwt.exception.JwtTokenMissingException;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.regex.Pattern;
 
 public final class AuthUtils {
@@ -40,6 +42,7 @@ public final class AuthUtils {
         return jwt;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getClaim(final String jwtToken, final String key) {
         final Jwt token = Jwt.parse(jwtToken);
         try {
@@ -50,9 +53,14 @@ public final class AuthUtils {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getClaim(JwtClaims claims, String key) {
         return claims.containsKey(key) ? ((T) claims.get(key)) : null;
 
     }
 
+    public static String createBasicAuthenticationHeader(String username, String password){
+        // set http basic auth for client
+        return "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+    }
 }

@@ -86,10 +86,10 @@ public class ThymeleafTemplateService implements TemplateService {
         return templateEngine;
     }
 
-    //Place the html templates in `resources/template/html`
-    private static ITemplateResolver createHTMLTemplateResolver(final String location) {
+    //Place the html templates in `resources/'template-location'/html`
+    private static ITemplateResolver createHTMLTemplateResolver(final String templateLocation) {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/" + location + "/");
+        templateResolver.setPrefix("/" + templateLocation + "/");
         templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -106,6 +106,4 @@ public class ThymeleafTemplateService implements TemplateService {
         messageSource.setUseCodeAsDefaultMessage(true);
         return messageSource;
     }
-
-
 }

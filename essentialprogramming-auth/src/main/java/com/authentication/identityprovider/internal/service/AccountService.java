@@ -18,7 +18,9 @@ import com.util.enums.Language;
 import com.util.exceptions.ApiException;
 import com.util.password.PasswordStrength;
 import com.util.password.PasswordUtil;
+import com.util.random.XORShiftRandom;
 import com.util.web.JsonResponse;
+import org.jboss.weld.util.collections.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,18 +101,18 @@ public class AccountService implements AuthenticationProvider {
 
 
     public Serializable generateOtp(String email, Language language) throws ApiException {
-        String otp = NanoIdUtils.randomNanoId();
 
-        Account account = accountRepository.findByEmail(email).orElseThrow(() ->
+        final Account account = accountRepository.findByEmail(email).orElseThrow(() ->
                 new ApiException(Messages.get("USER.NOT.EXIST", language), HTTPCustomStatus.UNAUTHORIZED));
 
-
+        final String otp = NanoIdUtils.randomNanoId(XORShiftRandom.instance(), NanoIdUtils.DEFAULT_ALPHABET, NanoIdUtils.DEFAULT_SIZE);
         String url = OTP_LOGIN_URL.value() + "?email=" + account.getEmail() + "&otp=" + otp;
 
-        Map<String, Object> templateKeysAndValues = new HashMap<>();
-        templateKeysAndValues.put("fullName", account.getFullName());
-        templateKeysAndValues.put("link", url);
-        emailManager.send(account.getEmail(), EmailMessages.get("otp_login.subject", language.getLocale()), TemplateEnum.OTP_LOGIN, templateKeysAndValues, language.getLocale());
+        Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
+                .put("fullName", account.getFullName())
+                .put("link", url)
+                .build();
+        emailManager.send(account.getEmail(), EmailMessages.get("otp_login.subject", language.getLocale()), TemplateEnum.OTP_LOGIN, templateVariables, language.getLocale());
 
         return new JsonResponse()
                 .with("status", "ok")
