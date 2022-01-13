@@ -29,6 +29,11 @@ import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -109,6 +114,12 @@ public class UserService {
         }
 
         return user;
+    }
+
+    @Transactional
+    public List<UserJSON> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
     }
 
     @Transactional
