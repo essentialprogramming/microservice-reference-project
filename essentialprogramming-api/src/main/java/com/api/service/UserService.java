@@ -1,29 +1,34 @@
 package com.api.service;
 
-import com.api.entities.*;
+import com.api.entities.User;
 import com.api.env.resources.AppResources;
 import com.api.mapper.UserMapper;
-import com.api.model.*;
+import com.api.model.UserInput;
 import com.api.output.UserJSON;
-import com.api.repository.*;
+import com.api.repository.UserRepository;
+import com.api.template.Templates;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.crypto.Crypt;
 import com.crypto.PasswordHash;
-import com.api.template.Templates;
 import com.email.service.EmailManager;
 import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
+import com.util.web.JsonResponse;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.Serializable;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -106,4 +111,17 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public Serializable deleteUser(String email) {
+        if (!userRepository.existsByEmail(email)) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "User with email " + email +  " not found!");
+        }
+
+        userRepository.deleteUserByEmail(email);
+
+        return new JsonResponse()
+                .with("status", "ok")
+                .with("message", "User with email " + email + " was successfully deleted!")
+                .done();
+    }
 }

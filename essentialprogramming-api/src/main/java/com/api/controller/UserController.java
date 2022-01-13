@@ -1,15 +1,15 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
+import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
 import com.api.service.UserService;
-import com.api.model.*;
-import com.util.async.ExecutorsProvider;
 import com.exception.ExceptionHandler;
 import com.internationalization.Messages;
 import com.token.validation.auth.AuthUtils;
 import com.util.async.Computation;
+import com.util.async.ExecutorsProvider;
 import com.util.enums.HTTPCustomStatus;
 import com.util.enums.Language;
 import com.util.exceptions.ApiException;
@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -107,4 +109,40 @@ public class UserController {
     private Serializable loadUser(String email) throws ApiException {
         return userService.loadUser(email, language);
     }
+
+    @DELETE
+    @Path("/delete")
+    @Consumes("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Delete User",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Returns a custom JSON with OK status and a message," +
+                            "if the User with a given email has been deleted.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(example = "{\"status\": \"ok\", " +
+                                            "\"message\": \"User was successfully deleted!\"}"))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized."),
+                    @ApiResponse(responseCode = "404", description = "User not found!"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            })
+    @AllowUserIf("hasAnyRole(@privilegeService.getPrivilegeRoles(\"LOAD.USER\")) OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
+    public void deleteUser(@HeaderParam("Authorization") String authorization,
+                           @Valid @NotNull(message = "Email must be provided!")
+                           @QueryParam("email") String userEmail,
+                           @Suspended AsyncResponse asyncResponse) {
+
+        final String bearer = AuthUtils.extractBearerToken(authorization);
+        final String email = AuthUtils.getClaim(bearer, "email");
+
+        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        Computation.computeAsync(() -> deleteUser(userEmail), executorService)
+                .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
+                .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
+
+    }
+
+    private Serializable deleteUser(String userEmail) throws ApiException {
+        return userService.deleteUser(userEmail);
+    }
+
 }
