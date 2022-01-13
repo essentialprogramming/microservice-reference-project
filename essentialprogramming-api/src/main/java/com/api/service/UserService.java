@@ -1,15 +1,15 @@
 package com.api.service;
 
-import com.api.entities.*;
+import com.api.entities.User;
 import com.api.env.resources.AppResources;
 import com.api.mapper.UserMapper;
-import com.api.model.*;
+import com.api.model.UserInput;
 import com.api.output.UserJSON;
-import com.api.repository.*;
+import com.api.repository.UserRepository;
+import com.api.template.Templates;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.crypto.Crypt;
 import com.crypto.PasswordHash;
-import com.api.template.Templates;
 import com.email.service.EmailManager;
 import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
@@ -22,7 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -102,6 +106,12 @@ public class UserService {
         }
 
         return user;
+    }
+
+    @Transactional
+    public List<UserJSON> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
     }
 
 }
