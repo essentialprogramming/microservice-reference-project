@@ -1,15 +1,15 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
+import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
 import com.api.service.UserService;
-import com.api.model.*;
-import com.util.async.ExecutorsProvider;
 import com.exception.ExceptionHandler;
 import com.internationalization.Messages;
 import com.token.validation.auth.AuthUtils;
 import com.util.async.Computation;
+import com.util.async.ExecutorsProvider;
 import com.util.enums.HTTPCustomStatus;
 import com.util.enums.Language;
 import com.util.exceptions.ApiException;
@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 
@@ -106,5 +107,33 @@ public class UserController {
 
     private Serializable loadUser(String email) throws ApiException {
         return userService.loadUser(email, language);
+    }
+
+    @GET
+    @Path("user/all")
+    @Consumes("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "View all users",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Return a list of all users",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserJSON.class)))
+            })
+    @RolesAllowed({"visitor", "administrator"})
+    @AllowUserIf("hasAuthority('PERMISSION_do:anything') OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
+    public void findAllUsers(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
+
+        final String bearer = AuthUtils.extractBearerToken(authorization);
+        final String email = AuthUtils.getClaim(bearer, "email");
+
+        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        Computation.computeAsync(this::findAllUsers, executorService)
+                .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
+                .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
+
+    }
+
+    private List<UserJSON> findAllUsers() {
+        return userService.getAllUsers();
     }
 }
