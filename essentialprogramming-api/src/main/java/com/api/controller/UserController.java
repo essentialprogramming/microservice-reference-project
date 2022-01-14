@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -136,4 +138,40 @@ public class UserController {
     private List<UserJSON> findAllUsers() {
         return userService.getAllUsers();
     }
+
+    @DELETE
+    @Path("/delete")
+    @Consumes("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Delete User",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Returns a custom JSON with OK status and a message," +
+                            "if the User with a given email has been deleted.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(example = "{\"status\": \"ok\", " +
+                                            "\"message\": \"User was successfully deleted!\"}"))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized."),
+                    @ApiResponse(responseCode = "404", description = "User not found!"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            })
+    @AllowUserIf("hasAnyRole(@privilegeService.getPrivilegeRoles(\"LOAD.USER\")) OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
+    public void deleteUser(@HeaderParam("Authorization") String authorization,
+                           @Valid @NotNull(message = "Email must be provided!")
+                           @QueryParam("email") String userEmail,
+                           @Suspended AsyncResponse asyncResponse) {
+
+        final String bearer = AuthUtils.extractBearerToken(authorization);
+        final String email = AuthUtils.getClaim(bearer, "email");
+
+        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        Computation.computeAsync(() -> deleteUser(userEmail), executorService)
+                .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
+                .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
+
+    }
+
+    private Serializable deleteUser(String userEmail) throws ApiException {
+        return userService.deleteUser(userEmail);
+    }
+
 }

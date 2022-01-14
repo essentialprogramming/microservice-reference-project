@@ -15,14 +15,20 @@ import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
+import com.util.web.JsonResponse;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.Serializable;
 import java.security.GeneralSecurityException;
+import java.util.Map;
+import java.util.Optional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,4 +122,17 @@ public class UserService {
         return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
     }
 
+    @Transactional
+    public Serializable deleteUser(String email) {
+        if (!userRepository.existsByEmail(email)) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "User with email " + email +  " not found!");
+        }
+
+        userRepository.deleteUserByEmail(email);
+
+        return new JsonResponse()
+                .with("status", "ok")
+                .with("message", "User with email " + email + " was successfully deleted!")
+                .done();
+    }
 }
