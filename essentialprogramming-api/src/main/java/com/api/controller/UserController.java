@@ -50,7 +50,7 @@ public class UserController {
 
 
     @POST
-    @Path("user/create")
+    @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create user",
@@ -81,7 +81,7 @@ public class UserController {
 
 
     @GET
-    @Path("user/load")
+    @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Load user",
