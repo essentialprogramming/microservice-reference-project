@@ -1,13 +1,13 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
-import com.api.entities.User;
+import com.api.output.UserJSON;
+import com.api.service.UserService;
 import com.api.template.Templates;
 import com.template.service.TemplateService;
 import com.exception.ExceptionHandler;
 import com.util.async.Computation;
 import com.util.async.ExecutorsProvider;
-import com.util.enums.Language;
 import com.util.exceptions.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,13 +23,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
@@ -40,11 +38,9 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PDFController {
 
-    @Context
-    private Language language;
-
     private final TemplateService templateService;
 
+    private final UserService userService;
 
     @POST
     @Path("/pdf")
@@ -59,7 +55,7 @@ public class PDFController {
     public void generatePDF(@Suspended AsyncResponse asyncResponse) {
         final String mediaType = "application/octet-stream";
         final String fileName = String.format("pdf-example-%s.%s",
-                LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("MM-dd-yyyy-HH-mm")),
+                LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 "pdf");
 
         final ExecutorService executorService = ExecutorsProvider.getExecutorService();
@@ -74,35 +70,11 @@ public class PDFController {
 
     private Serializable generatePDF() throws ApiException {
 
-        final User firstUser = new User();
-        firstUser.setFirstName("Razvan");
-        firstUser.setLastName("Prichici");
-        firstUser.setEmail("razvanpaulp@gmail.com");
-        firstUser.setCreatedDate(LocalDateTime.now());
-        firstUser.setLanguage(generateLanguage());
-
-        final User secondUser = new User();
-        secondUser.setFirstName("Roger");
-        secondUser.setLastName("Federer");
-        secondUser.setEmail("roger@atp.com");
-        secondUser.setCreatedDate(LocalDateTime.now());
-
-        final List<User> users = new ArrayList<>();
-        users.add(firstUser);
-        users.add(secondUser);
+        final List<UserJSON> users = userService.getAllUsers();
 
         Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
                 .put("users", users)
                 .build();
-        return templateService.generatePDF(Templates.PDF_EXAMPLE, templateVariables, language.getLocale());
-    }
-
-    private static com.api.entities.Language generateLanguage() {
-        com.api.entities.Language language = new com.api.entities.Language();
-        language.setId(1);
-        language.setName("english");
-        language.setDisplayOrder(2);
-        language.setSymbol("EN");
-        return language;
+        return templateService.generatePDF(Templates.PDF_EXAMPLE, templateVariables);
     }
 }

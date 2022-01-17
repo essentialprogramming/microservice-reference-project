@@ -4,8 +4,6 @@ package com.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-
-
 @Builder
 @Getter
 @Setter
@@ -20,6 +18,4 @@ public class UserInput {
     private String email;
     private String password;
     private String confirmPassword;
-
-
 }

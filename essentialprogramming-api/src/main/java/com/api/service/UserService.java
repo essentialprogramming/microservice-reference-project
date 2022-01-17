@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,6 +50,9 @@ public class UserService {
 
         final User user = UserMapper.inputToUser(input);
         final User result = saveUser(user, input, language);
+
+        LocalDateTime createdDate = LocalDateTime.now();
+        user.setCreatedDate(createdDate);
 
         String validationKey = Crypt.encrypt(NanoIdUtils.randomNanoId(), AppResources.ENCRYPTION_KEY.value());
         String encryptedUserKey = Crypt.encrypt(result.getUserKey(), AppResources.ENCRYPTION_KEY.value());
