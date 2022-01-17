@@ -8,16 +8,24 @@ import java.net.URL;
 
 
 public class FileInputResource implements InputResource, AutoCloseable {
+
     private static final int BYTE_RANGE = 1024;
+
     private final URL file;
+    private final InputStream inputStream;
 
     public FileInputResource(String fileName) throws IOException {
         file = InputResource.getURL(fileName);
+        inputStream = new BufferedInputStream(file.openStream());
+    }
+
+    public URL getFile() {
+        return file;
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return new BufferedInputStream(file.openStream());
+    public InputStream getInputStream() {
+        return inputStream;
     }
 
     public byte[] getBytes() throws IOException {
@@ -41,11 +49,13 @@ public class FileInputResource implements InputResource, AutoCloseable {
         }
     }
 
-    public URL getFile() {
-        return file;
-    }
+
 
     @Override
-    public void close() {
+    public void close() throws IOException {
+        if (inputStream != null) {
+            inputStream.close();
+        }
+
     }
 }
