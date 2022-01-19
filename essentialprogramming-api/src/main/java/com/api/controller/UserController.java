@@ -63,7 +63,7 @@ public class UserController {
                                     schema = @Schema(implementation = UserJSON.class)))
             })
     @Anonymous
-    public void createUser(UserInput userInput, @Suspended AsyncResponse asyncResponse) {
+    public void createUser(@Valid UserInput userInput, @Suspended AsyncResponse asyncResponse) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> createUser(userInput, language), executorService)
