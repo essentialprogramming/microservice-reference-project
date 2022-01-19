@@ -29,10 +29,7 @@ import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.Optional;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -117,13 +114,13 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserJSON> getAllUsers() {
+    public List<UserJSON> loadAll() {
         List<User> users = userRepository.findAll();
         return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
     }
 
     @Transactional
-    public Serializable deleteUser(String email) {
+    public Serializable deleteUser(final String email) {
         if (!userRepository.existsByEmail(email)) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "User with email " + email +  " not found!");
         }

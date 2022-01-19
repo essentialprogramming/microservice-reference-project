@@ -58,7 +58,7 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return user if successfully added",
+                    @ApiResponse(responseCode = "201", description = "Return user if successfully added",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserJSON.class)))
             })
@@ -67,20 +67,19 @@ public class UserController {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> createUser(userInput, language), executorService)
-                .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
+                .thenApplyAsync(json -> asyncResponse.resume(Response.status(201).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
 
     }
 
     private Serializable createUser(UserInput userInput, Language language) throws GeneralSecurityException, ApiException {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
-        if (isValid) {
-            return userService.save(userInput, language);
-
-        } else
+        if (!isValid) {
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
-    }
+        }
+        return userService.save(userInput, language);
 
+    }
 
 
     @GET
@@ -115,7 +114,7 @@ public class UserController {
     @Path("user/all")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "View all users",
+    @Operation(summary = "Load all users",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Return a list of all users",
                             content = @Content(mediaType = "application/json",
@@ -123,11 +122,7 @@ public class UserController {
             })
     @RolesAllowed({"visitor", "administrator"})
     @AllowUserIf("hasAuthority('PERMISSION_do:anything') OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
-    public void findAllUsers(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
-
-        final String bearer = AuthUtils.extractBearerToken(authorization);
-        final String email = AuthUtils.getClaim(bearer, "email");
-
+    public void loadAll(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(this::findAllUsers, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
@@ -136,7 +131,7 @@ public class UserController {
     }
 
     private List<UserJSON> findAllUsers() {
-        return userService.getAllUsers();
+        return userService.loadAll();
     }
 
     @DELETE
@@ -159,9 +154,6 @@ public class UserController {
                            @Valid @NotNull(message = "Email must be provided!")
                            @QueryParam("email") String userEmail,
                            @Suspended AsyncResponse asyncResponse) {
-
-        final String bearer = AuthUtils.extractBearerToken(authorization);
-        final String email = AuthUtils.getClaim(bearer, "email");
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> deleteUser(userEmail), executorService)
