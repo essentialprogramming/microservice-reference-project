@@ -14,6 +14,7 @@ import com.util.enums.HTTPCustomStatus;
 import com.util.enums.Language;
 import com.util.exceptions.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -151,8 +152,10 @@ public class UserController {
             })
     @AllowUserIf("hasAnyRole(@privilegeService.getPrivilegeRoles(\"LOAD.USER\")) OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
     public void deleteUser(@HeaderParam("Authorization") String authorization,
-                           @Valid @NotNull(message = "Email must be provided!")
-                           @QueryParam("email") String userEmail,
+
+                           @Parameter(description = "Email",  required = true, example = "razvanpaulp@gmail.com")
+                           @QueryParam("email") @Valid @NotNull(message = "Email must be provided!") final String userEmail,
+
                            @Suspended AsyncResponse asyncResponse) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
