@@ -110,6 +110,7 @@ public class UserService {
             user.setPassword(password);
         }
 
+        logger.info("user saved userId={}", user.getId());
         return user;
     }
 
