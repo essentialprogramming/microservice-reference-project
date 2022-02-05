@@ -53,7 +53,7 @@ public final class Crypt {
             throw new IllegalArgumentException("Null input value");
         }
 
-        if (secretKey == null || secretKey.getBytes().length < 4) {
+        if (secretKey == null || secretKey.getBytes(StandardCharsets.UTF_8).length < 4) {
             throw new IllegalArgumentException("Key length must be longer than 4 bytes");
         }
 

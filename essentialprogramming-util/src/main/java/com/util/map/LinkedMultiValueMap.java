@@ -3,11 +3,11 @@ package com.util.map;
 import java.io.Serializable;
 import java.util.*;
 
-public class LinkedMultiValueMap<K, V> implements MultiValueMap<K, V>, Serializable {
+public class LinkedMultiValueMap<K, V> implements MultiValueMap<K, V>, Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
-    private final transient Map<K, List<V>> targetMap;
+    private final Map<K, List<V>> targetMap;
 
 
     public LinkedMultiValueMap() {
