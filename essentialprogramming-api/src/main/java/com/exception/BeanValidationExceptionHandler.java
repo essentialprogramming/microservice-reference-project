@@ -18,10 +18,9 @@ public class BeanValidationExceptionHandler implements ExceptionMapper<Constrain
         Set<ConstraintViolation<?>> constraintValidations = e.getConstraintViolations();
         ConstraintViolation<?> constraintValidation = constraintValidations.iterator().next();
 
-        final JsonResponse jsonResponse;
-        jsonResponse = new JsonResponse()
+        final JsonResponse jsonResponse = new JsonResponse()
                 .with("Message", constraintValidation.getMessage())
-                .with("Code", Response.Status.BAD_REQUEST.getStatusCode())
+                .with("Status", Response.Status.BAD_REQUEST.getStatusCode() + " (" + Response.Status.BAD_REQUEST.getReasonPhrase() + ")")
                 .done();
         return Response
                 .status(Response.Status.BAD_REQUEST)
