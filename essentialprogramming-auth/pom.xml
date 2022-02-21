@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.11</version>
+            <version>[42.3.2,)</version>
         </dependency>
 
 
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>8.19</version>
+            <version>9.15.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.minidev/json-smart -->

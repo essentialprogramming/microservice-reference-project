@@ -29,7 +29,9 @@
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <compilerArgs>
+                        <arg>-Xlint:all,-processing</arg>
+                    </compilerArgs>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <encoding>${project.build.sourceEncoding}</encoding>

@@ -29,7 +29,7 @@ public class JPAConfig {
 
     @Bean(name = "hikariDataSource")
     public HikariDataSource hikariDataSource() {
-        HikariConfig config = new HikariConfig();
+        final HikariConfig config = new HikariConfig();
         config.setMinimumIdle(5);
         config.setMaximumPoolSize(50);
         config.setConnectionTimeout(10000);
@@ -61,7 +61,7 @@ public class JPAConfig {
     }
 
     private Properties properties() {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         //properties.setProperty("hibernate.show_sql", "true"); //DON'T USE THIS. USE log4j to configure log level of SQL statements
         properties.setProperty("hibernate.format_sql", "true");
 
@@ -70,8 +70,9 @@ public class JPAConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
+
         return transactionManager;
     }
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="com.util.logging.json" status="info">
+    <Properties>
+        <Property name="logLevel">INFO</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="consoleAppender" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" pattern=" %d{yyyy-MM-dd HH:mm:ss} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=green}  --- [%15.15t] %style{%-40.40c{1.}}{cyan} : %m%n%ex"/>
+        </Console>
+
+        <Console name="jsonConsoleAppender" target="SYSTEM_OUT">
+            <CustomJsonLayout/>
+        </Console>
+
+
+        <RollingFile
+                name="rollingFile"
+                fileName="logs/logfile.log"
+                filePattern="logs/archive/logfile.log.%d{yyyy-MM-dd}"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <AsyncLogger name="org.hibernate.SQL" level="DEBUG">
+        </AsyncLogger>
+
+        <!-- pattern layout actually uses location, so we need to include it -->
+        <AsyncLogger name="com.api" level="DEBUG" includeLocation="true">
+        </AsyncLogger>
+
+        <AsyncRoot level="${logLevel}">
+            <AppenderRef ref="jsonConsoleAppender"/>
+            <AppenderRef ref="rollingFile"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

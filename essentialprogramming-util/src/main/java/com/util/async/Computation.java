@@ -67,6 +67,7 @@ public final class Computation {
 	 * and collect the results as a stream.
 	 * @param futures List of futures to be executed
 	 */
+	@SuppressWarnings("rawtypes")
 	public static <T> CompletableFuture<Stream<T>> all(Stream<CompletableFuture<T>> futures) {
 		List<CompletableFuture<T>> futureList = futures
 				.filter(Objects::nonNull)

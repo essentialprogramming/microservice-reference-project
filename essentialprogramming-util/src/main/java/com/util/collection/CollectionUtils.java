@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 public class CollectionUtils {
 
     @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> List<T> concat(Collection<T>... lists) {
         return Stream.of(lists).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="com.util.logging.json" status="info">
+    <Properties>
+        <Property name="logLevel">INFO</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="consoleAppender" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" pattern=" %d{yyyy-MM-dd HH:mm:ss} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=blue, DEBUG=green bold, TRACE=light blue}  --- [%15.15t]  : %m%n%ex" />
+        </Console>
+
+    </Appenders>
+    <Loggers>
+        <AsyncLogger name="org.hibernate.SQL" level="DEBUG">
+        </AsyncLogger>
+
+        <!-- pattern layout actually uses location, so we need to include it -->
+        <AsyncLogger name="com.api" level="DEBUG" includeLocation="true">
+        </AsyncLogger>
+
+        <AsyncRoot level="${logLevel}">
+            <AppenderRef ref="consoleAppender"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

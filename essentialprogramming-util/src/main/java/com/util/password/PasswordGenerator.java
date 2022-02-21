@@ -173,12 +173,12 @@ public class PasswordGenerator {
             random = new XORShiftRandom();
         }
 
-        public Builder<T> usingRandom(Random random) {
+        public Builder<T> usingRandom(final Random random) {
             this.random = random;
             return this;
         }
 
-        public Builder<T> withOptions(PasswordOptions passwordOptions) {
+        public Builder<T> withOptions(final PasswordOptions passwordOptions) {
             this.passwordOptions = passwordOptions;
             return this;
         }

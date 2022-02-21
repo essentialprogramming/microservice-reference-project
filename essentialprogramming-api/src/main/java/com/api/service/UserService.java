@@ -114,17 +114,18 @@ public class UserService {
             user.setPassword(password);
         }
 
+        logger.info("user saved userId={}", user.getId());
         return user;
     }
 
     @Transactional
-    public List<UserJSON> getAllUsers() {
+    public List<UserJSON> loadAll() {
         List<User> users = userRepository.findAll();
         return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
     }
 
     @Transactional
-    public Serializable deleteUser(String email) {
+    public Serializable deleteUser(final String email) {
         if (!userRepository.existsByEmail(email)) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "User with email " + email +  " not found!");
         }

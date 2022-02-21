@@ -1,7 +1,6 @@
 package com.api.config;
 
 import com.authentication.security.KeyStoreService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.DynamicFeature;
@@ -11,8 +10,8 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class SecurityFeature implements DynamicFeature {
-    @Autowired
-    KeyStoreService keyStoreService;
+
+    private static final KeyStoreService keyStoreService = KeyStoreService.getInstance();
 
     @Override
     public void configure(final ResourceInfo resourceInfo, final FeatureContext context) {
@@ -26,6 +25,5 @@ public class SecurityFeature implements DynamicFeature {
         }
 
         context.register(new SecurityFilter(keyStoreService, resourceInfo), Priorities.AUTHENTICATION);
-
     }
 }

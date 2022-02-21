@@ -14,13 +14,12 @@ import com.util.enums.HTTPCustomStatus;
 import com.util.enums.Language;
 import com.util.exceptions.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
@@ -43,8 +42,6 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
     private final UserService userService;
 
 
@@ -58,29 +55,28 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return user if successfully added",
+                    @ApiResponse(responseCode = "201", description = "Return user if successfully added",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserJSON.class)))
             })
     @Anonymous
-    public void createUser(UserInput userInput, @Suspended AsyncResponse asyncResponse) {
+    public void createUser(@Valid UserInput userInput, @Suspended AsyncResponse asyncResponse) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> createUser(userInput, language), executorService)
-                .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
+                .thenApplyAsync(json -> asyncResponse.resume(Response.status(201).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
 
     }
 
     private Serializable createUser(UserInput userInput, Language language) throws GeneralSecurityException, ApiException {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
-        if (isValid) {
-            return userService.save(userInput, language);
-
-        } else
+        if (!isValid) {
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
-    }
+        }
+        return userService.save(userInput, language);
 
+    }
 
 
     @GET
@@ -115,7 +111,7 @@ public class UserController {
     @Path("user/all")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "View all users",
+    @Operation(summary = "Load all users",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Return a list of all users",
                             content = @Content(mediaType = "application/json",
@@ -123,11 +119,7 @@ public class UserController {
             })
     @RolesAllowed({"visitor", "administrator"})
     @AllowUserIf("hasAuthority('PERMISSION_do:anything') OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
-    public void findAllUsers(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
-
-        final String bearer = AuthUtils.extractBearerToken(authorization);
-        final String email = AuthUtils.getClaim(bearer, "email");
-
+    public void loadAll(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(this::findAllUsers, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
@@ -136,7 +128,7 @@ public class UserController {
     }
 
     private List<UserJSON> findAllUsers() {
-        return userService.getAllUsers();
+        return userService.loadAll();
     }
 
     @DELETE
@@ -156,12 +148,11 @@ public class UserController {
             })
     @AllowUserIf("hasAnyRole(@privilegeService.getPrivilegeRoles(\"LOAD.USER\")) OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
     public void deleteUser(@HeaderParam("Authorization") String authorization,
-                           @Valid @NotNull(message = "Email must be provided!")
-                           @QueryParam("email") String userEmail,
-                           @Suspended AsyncResponse asyncResponse) {
 
-        final String bearer = AuthUtils.extractBearerToken(authorization);
-        final String email = AuthUtils.getClaim(bearer, "email");
+                           @Parameter(description = "Email",  required = true, example = "razvanpaulp@gmail.com")
+                           @QueryParam("email") @Valid @NotNull(message = "Email must be provided!") final String userEmail,
+
+                           @Suspended AsyncResponse asyncResponse) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> deleteUser(userEmail), executorService)

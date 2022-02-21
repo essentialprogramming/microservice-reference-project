@@ -7,7 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthRequest implements TokenRequest {
 
+    @Schema(required = true, example = "razvanpaulp@gmail.com")
     private String email;
+
+    @Schema(required = true, example = "test")
     private String password;
 
     public String getEmail() {

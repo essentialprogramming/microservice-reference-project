@@ -129,7 +129,7 @@ public class TokenService {
         JWSObject jwsObject = new JWSObject(jwsHeader, payload);
 
         try {
-            JWSSigner signer = new RSASSASigner(privateSigningKey, false);
+            JWSSigner signer = new RSASSASigner(privateSigningKey);
             jwsObject.sign(signer);
         } catch (JOSEException e) {
             LOG.error(ErrorCode.UNABLE_TO_SIGN_TOKEN.getDescription());
@@ -192,7 +192,7 @@ public class TokenService {
     }
 
     protected String getRefreshToken(String email) {
-        JWSSigner jwsSigner = new RSASSASigner(keyStoreService.getPrivateKey(), true);
+        JWSSigner jwsSigner = new RSASSASigner(keyStoreService.getPrivateKey());
         Instant now = Instant.now();
 
         JWTClaimsSet refreshTokenClaims = new JWTClaimsSet.Builder()

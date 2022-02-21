@@ -28,6 +28,14 @@ public class KeyStoreService {
         privateKeyFilePath = Environment.getProperty(PRIVATE_KEY_FILE_PATH, DEFAULT_PRIVATE_KEY_FILE_PATH);
     }
 
+    private static class KeyStoreServiceHolder {
+        static final KeyStoreService INSTANCE = new KeyStoreService();
+    }
+
+    public static KeyStoreService getInstance() {
+        return KeyStoreServiceHolder.INSTANCE;
+    }
+
     public PublicKey getPublicKey() {
         try {
             return PemUtils.readPublicKeyFromPEMFile(publicKeyFilePath);

@@ -102,7 +102,6 @@ public final class UndertowServer {
                 .setDirectoryListingEnabled(false);
 
 
-
         final PathHandler pathHandler = Handlers.path()
                 .addPrefixPath("/", servletHandler)
                 .addPrefixPath("apidoc", resourceHandler);
@@ -120,12 +119,13 @@ public final class UndertowServer {
         LOCK.lock();
 
         server = Undertow.builder()
-                .addHttpListener(port, host)
-                .setHandler(shutdown)
-                .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
-                .build();
+                   .addHttpListener(port, host)
+                   .setHandler(shutdown)
+                   .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
+                   .build();
 
         server.start();
+        
         LOCK.unlock();
     }
 

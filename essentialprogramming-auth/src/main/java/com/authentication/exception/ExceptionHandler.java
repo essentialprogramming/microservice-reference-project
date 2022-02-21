@@ -1,8 +1,10 @@
 package com.authentication.exception;
 
+import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
 import com.util.password.PasswordException;
 import com.util.web.JsonResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
 
+@Slf4j
 public class ExceptionHandler {
 
     @FunctionalInterface
@@ -19,24 +22,26 @@ public class ExceptionHandler {
     }
 
     private final static Strategy<ApiException> apiExceptionStrategy = (exception) -> {
-        JsonResponse jsonResponse;
-        jsonResponse = new JsonResponse()
+        final HTTPCustomStatus status = exception.getHttpCode() == null ? HTTPCustomStatus.INVALID_REQUEST : exception.getHttpCode();
+        final JsonResponse jsonResponse = new JsonResponse()
                 .with("message", exception.getMessage())
-                .with("code", exception.getHttpCode())
+                .with("status", status.value() + " (" + status + ")")
                 .done();
+
+        log.warn("Client request can not be processed ({}). Business failure: {}", status, exception.getMessage());
         return Response
-                .status(exception.getHttpCode().value())
+                .status(status.value())
                 .entity(jsonResponse)
                 .build();
     };
 
     private final static Strategy<HttpClientErrorException> httpClientErrorException = (exception) -> {
-        JsonResponse jsonResponse;
-        jsonResponse = new JsonResponse()
+        final JsonResponse jsonResponse = new JsonResponse()
                 .with("message", exception.getMessage())
-                .with("code", exception.getStatusCode().value())
+                .with("status", exception.getStatusCode().value() + " (" + exception.getStatusCode().getReasonPhrase() + ")")
                 .done();
 
+        log.warn("Client request can not be processed ({}). Business failure: {}", exception.getStatusCode(), exception.getMessage());
         return Response
                 .status(exception.getStatusCode().value())
                 .entity(jsonResponse)
@@ -44,8 +49,7 @@ public class ExceptionHandler {
     };
 
     private final static Strategy<PasswordException> passwordExceptionStrategy = (exception) -> {
-        JsonResponse jsonResponse;
-        jsonResponse = new JsonResponse()
+        final JsonResponse jsonResponse = new JsonResponse()
                 .with("message", exception.getMessage())
                 .done();
         return Response
@@ -55,11 +59,9 @@ public class ExceptionHandler {
     };
 
     private final static Strategy<Throwable> defaultStrategy = (exception) -> {
-        JsonResponse jsonResponse;
-        exception.printStackTrace();
-        jsonResponse = new JsonResponse()
+        final JsonResponse jsonResponse = new JsonResponse()
                 .with("message", "INTERNAL SERVER ERROR")
-                .with("code", Response.Status.INTERNAL_SERVER_ERROR)
+                .with("status", Response.Status.INTERNAL_SERVER_ERROR.getStatusCode() + " (" + Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase() + ")")
                 .with("exception", ExceptionUtils.getStackTrace(exception))
                 .with("rootCause", ExceptionUtils.getRootCauseStackTrace(exception))
                 .done();
