@@ -50,7 +50,7 @@ public class UserController {
 
 
     @POST
-    @Path("user/create")
+    @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create user",
@@ -80,7 +80,7 @@ public class UserController {
 
 
     @GET
-    @Path("user/load")
+    @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Load user",
@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @GET
-    @Path("user/all")
+    @Path("users")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Load all users",
@@ -132,7 +132,7 @@ public class UserController {
     }
 
     @DELETE
-    @Path("/delete")
+    @Path("/user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Delete User",
