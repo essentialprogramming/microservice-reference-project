@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
+import com.api.entities.User;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
@@ -50,7 +51,7 @@ public class UserController {
 
 
     @POST
-    @Path("user/create")
+    @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create user",
@@ -80,7 +81,7 @@ public class UserController {
 
 
     @GET
-    @Path("user/load")
+    @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Load user",
@@ -127,7 +128,7 @@ public class UserController {
 
     }
 
-    private List<UserJSON> findAllUsers() {
+    private List<User> findAllUsers() {
         return userService.loadAll();
     }
 
