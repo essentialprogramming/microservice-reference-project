@@ -1,7 +1,7 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
-import com.api.output.UserJSON;
+import com.api.entities.User;
 import com.api.service.UserService;
 import com.api.template.Templates;
 import com.template.service.TemplateService;
@@ -70,7 +70,7 @@ public class PDFController {
 
     private Serializable generatePDF() throws ApiException {
 
-        final List<UserJSON> users = userService.getAllUsers();
+        final List<User> users = userService.loadAll();
 
         Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
                 .put("users", users)

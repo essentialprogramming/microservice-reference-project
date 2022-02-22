@@ -119,9 +119,8 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserJSON> loadAll() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
+    public List<User> loadAll() {
+        return userRepository.findAll();
     }
 
     @Transactional
