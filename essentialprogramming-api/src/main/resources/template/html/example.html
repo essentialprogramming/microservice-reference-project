@@ -77,7 +77,6 @@
         <th th:text="#{table.header.surname}" scope="col"></th>
         <th th:text="#{table.header.createdDate}" scope="col"></th>
         <th th:text="#{table.header.email}" scope="col"></th>
-        <th th:text="#{table.header.language}" scope="col"></th>
     </tr>
 
     <!--/*@thymesVar id="users" type="List<com.api.entities.User>"*/-->
@@ -86,9 +85,8 @@
         <!--/*@thymesVar id="user" type="com.api.entities.User"*/-->
         <td th:text="${{user.firstName}}"></td>
         <td th:text="${{user.lastName}}"></td>
-        <td class="date-fixed-format" th:text="${{#temporals.format(user.createdDate, 'yyyy-MM-dd HH:mm:ss')}}"></td>
+        <td th:text="${{#temporals.format(user.createdDate, 'yyyy-MM-dd HH:mm:ss')}}"></td>
         <td th:text="${{user.email}}"></td>
-        <td th:text="${{user?.language?.symbol}}"></td>
     </tr>
     </tbody>
 </table>

@@ -56,8 +56,8 @@ public class ThymeleafTemplateService implements TemplateService {
     }
 
     @Override
-    public byte[] generatePDF(Template template, Map<String, Object> content, Locale locale) {
-        final String htmlContent = generateHTML(template, content, locale);
+    public byte[] generatePDF(Template template, Map<String, Object> content) {
+        final String htmlContent = generateHTML(template, content);
         byte[] pdfByteArray;
 
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

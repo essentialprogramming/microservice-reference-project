@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
+import com.api.entities.User;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
@@ -127,7 +128,7 @@ public class UserController {
 
     }
 
-    private List<UserJSON> findAllUsers() {
+    private List<User> findAllUsers() {
         return userService.loadAll();
     }
 

@@ -27,6 +27,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.Serializable;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
@@ -53,6 +54,9 @@ public class UserService {
 
         final User user = UserMapper.inputToUser(input);
         final User result = saveUser(user, input, language);
+
+        LocalDateTime createdDate = LocalDateTime.now();
+        user.setCreatedDate(createdDate);
 
         String validationKey = Crypt.encrypt(NanoIdUtils.randomNanoId(), AppResources.ENCRYPTION_KEY.value());
         String encryptedUserKey = Crypt.encrypt(result.getUserKey(), AppResources.ENCRYPTION_KEY.value());
@@ -115,9 +119,8 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserJSON> loadAll() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::userToJson).collect(Collectors.toList());
+    public List<User> loadAll() {
+        return userRepository.findAll();
     }
 
     @Transactional
