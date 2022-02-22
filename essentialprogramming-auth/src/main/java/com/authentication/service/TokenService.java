@@ -198,6 +198,7 @@ public class TokenService {
         JWTClaimsSet refreshTokenClaims = new JWTClaimsSet.Builder()
                 .issuer("EssentialProgramming Auth Service")
                 .claim("email", email)
+                .issueTime(Date.from(now))
                 //refresh token for 1 day.
                 .expirationTime(Date.from(now.plus(1, ChronoUnit.DAYS)))
                 .build();
