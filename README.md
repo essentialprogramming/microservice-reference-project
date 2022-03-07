@@ -37,3 +37,9 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 - run
 `mvn compile flyway:baseline; `
 `mvn compile flyway:migrate; `
+
+
+### 🌀 Usefull commands
+    `mvn dependency:tree`
+ 
+    `mvn dependency:tree -Dincludes=net.minidev:json-smart` //Filter the dependency tree
