@@ -1,82 +1,115 @@
 const path = require('path');
 
-module.exports = [{
-    entry: {
-        app: [
-            'babel-polyfill',
-            './src/main/resources/webapp/resources/app/quiz.js'
-
-
-        ]
-    },
-    output: {
-        path: path.resolve(__dirname, './src/main/resources/webapp/resources/app'),
-        filename: 'bundle.js'
-    },
-    module: {
-        rules: [
+module.exports = [
+    /*
+    {
+        experiments:
             {
-                // Only run `.js` and `.jsx` files through Babel
-                test: /\.js?$/,
-                exclude: /(node_modules)/,
-                use: [{
-                    loader: 'babel-loader',
-                    options: {
-                        "presets": [
-                            ["@babel/preset-env", {
-                                "targets": {
-                                    "ie": "11"
-                                },
-                                "useBuiltIns": false
-                            }],
-                            "@babel/preset-react"
-                        ]
-                    }
-                }]
-            },
-            {
-                test: /\.(js|jsx)$/,
-                loader: 'i18next-loader!babel-loader'
+                backCompat: true
             }
-        ]
-
-    }
-},
-
-{
-    entry: {
-        app: [
-            'regenerator-runtime',
-            './src/main/resources/webapp/resources/app/quiz.js'
-
-
-        ]
     },
-    output: {
-        filename: 'bundle.es6.js',
-        path: path.resolve(__dirname, './src/main/resources/webapp/resources/app'),
+    */
+    {
+        entry: {
+            app: [
+                'babel-polyfill',
+                './src/main/resources/webapp/resources/app/quiz.js'
+
+
+            ]
+        },
+        output: {
+            path: path.resolve(__dirname, './src/main/resources/webapp/resources/app'),
+            filename: 'bundle.js'
+        },
+        devtool: 'source-map',
+        module: {
+            rules: [
+                {
+                    // Only run `.js` and `.jsx` files through Babel
+                    test: /\.js?$/,
+                    exclude: /(node_modules)/,
+                    use: [{
+                        loader: 'babel-loader',
+                        options: {
+                            "presets": [
+                                ["@babel/preset-env", {
+                                    "targets": {
+                                        "ie": "11"
+                                    },
+                                    "useBuiltIns": false
+                                }],
+                                "@babel/preset-react"
+                            ],
+                            "plugins": [
+                                ["@babel/plugin-proposal-class-properties", {"loose": true}],
+                                ['@babel/plugin-proposal-private-methods', {loose: true}],
+                                ['@babel/plugin-proposal-private-property-in-object', {loose: true}]
+                            ]
+                        }
+                    }]
+                },
+                {
+                    test: /\.(js|jsx)$/,
+                    resolve: {
+                        fullySpecified: false
+                    },
+                    use: ['i18next-loader', 'babel-loader']
+                }
+            ]
+
+        }
     },
-    module: {
-        rules: [
-            {
-                // Only run `.js` and `.jsx` files through Babel
-                test: /\.js?$/,
-                exclude: /(node_modules)/,
-                use: [{
-                    loader: 'babel-loader',
-                    options: {
-                        "presets": [
-                            ["@babel/preset-env", {
-                                "targets": {
-                                    "esmodules": true,
-                                }
-                            }],
-                            "@babel/preset-react"
-                        ]
-                    }
-                }]
-            }
-        ],
+
+    {
+        entry: {
+            app: [
+                'regenerator-runtime',
+                './src/main/resources/webapp/resources/app/quiz.js'
+
+
+            ]
+        },
+        output: {
+            filename: 'bundle.es6.js',
+            path: path.resolve(__dirname, './src/main/resources/webapp/resources/app'),
+        },
+        devtool: 'source-map',
+        module: {
+            rules: [
+                {
+                    // Only run `.js` and `.jsx` files through Babel
+                    test: /\.js?$/,
+                    exclude: /(node_modules)/,
+                    use: [{
+                        loader: 'babel-loader',
+                        options: {
+                            "presets": [
+                                ["@babel/preset-env", {
+                                    "targets": {
+                                        "esmodules": true,
+                                    }
+                                }],
+                                "@babel/preset-react"
+                            ],
+                            "plugins": [
+                                ["@babel/plugin-proposal-class-properties", {"loose": true}],
+                                ['@babel/plugin-proposal-private-methods', {loose: true}],
+                                ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
+                                ['@babel/plugin-transform-runtime', {useESModules: true}]
+                            ]
+                        }
+                    }]
+                },
+                {
+                    test: /\.(js|jsx)$/,
+                    resolve: {
+                        fullySpecified: false
+                    },
+                    use: ['i18next-loader', 'babel-loader']
+                }
+            ],
+
+        }
     }
-}
 ];
