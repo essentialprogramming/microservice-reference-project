@@ -13,7 +13,7 @@ This project is inspired by the idea to quickly create a production ready projec
 Build
 ---------------
 * Get the latest version from the git repository
-* Run: mvn clean install
+* Run ` mvn clean install` to build the project.
 
 
 Run
