@@ -8,8 +8,7 @@ By default, the project uses JDK 8, but works also with JDK 11.
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
   - Adoptium
-    - Java 8: https://adoptium.net/?variant=openjdk8&jvmVariant=hotspot
-    - Java 11: https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot
+    - Java : https://adoptium.net/temurin/releases
  
   - RedHat
     - Java : https://developers.redhat.com/products/openjdk/download
