@@ -5,8 +5,9 @@ This project is inspired by the idea to quickly create a production ready projec
 ### 🌀 Prerequisites:
 By default, the project uses JDK 8, but works also with JDK 11.
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-
+* **JDK**
+  - Oracle
+    - Java : http://www.oracle.com/technetwork/java/javase/downloads/index.html
   - Adoptium
     - Java : https://adoptium.net/temurin/releases
  
