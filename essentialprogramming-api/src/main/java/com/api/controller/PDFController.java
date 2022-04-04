@@ -14,10 +14,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.jboss.weld.util.collections.ImmutableMap;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,14 +32,20 @@ import java.util.Map;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 
-@Tag(description = "Pdf API", name = "Download PDF")
+import static com.api.config.AppConfig.PDF_API;
+
+@Tag(description = PDF_API, name = "Download PDF")
 @Path("/")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PDFController {
 
     private final TemplateService templateService;
-
     private final UserService userService;
+
+    @Inject
+    public PDFController(TemplateService templateService, UserService userService) {
+        this.templateService = templateService;
+        this.userService = userService;
+    }
 
     @POST
     @Path("/pdf")

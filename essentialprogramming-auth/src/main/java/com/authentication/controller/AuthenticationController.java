@@ -20,8 +20,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -46,8 +46,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-
-    @Autowired
+    @Inject
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
@@ -154,7 +153,7 @@ public class AuthenticationController {
 
     }
 
-    private AccessToken otpLogin(AuthRequest authRequest) throws GeneralSecurityException, JsonProcessingException, ApiException {
+    private AccessToken otpLogin(AuthRequest authRequest) throws  ApiException {
         return authenticationService.authenticate(authRequest, AccessChannel.OTP, language);
     }
 

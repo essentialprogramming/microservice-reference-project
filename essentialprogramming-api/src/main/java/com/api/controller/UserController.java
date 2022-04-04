@@ -20,10 +20,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -38,9 +37,10 @@ import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 
-@Tag(description = "User API", name = "User Services")
+import static com.api.config.AppConfig.USER_API;
+
+@Tag(description = USER_API, name = "User Services")
 @Path("/v1/")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
 
     private final UserService userService;
@@ -48,6 +48,11 @@ public class UserController {
 
     @Context
     private Language language;
+
+    @Inject
+    public UserController(final UserService userService) {
+        this.userService = userService;
+    }
 
 
     @POST
@@ -120,6 +125,7 @@ public class UserController {
             })
     @RolesAllowed({"visitor", "administrator"})
     @AllowUserIf("hasAuthority('PERMISSION_do:anything') OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
+    @Anonymous
     public void loadAll(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(this::findAllUsers, executorService)

@@ -16,10 +16,11 @@ import com.internationalization.Messages;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
 import com.util.web.JsonResponse;
+import lombok.RequiredArgsConstructor;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +28,16 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.Serializable;
 import java.security.GeneralSecurityException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.config.ClockConfig.UTC_CLOCK;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -42,12 +46,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailManager emailManager;
 
-    @Autowired
-    public UserService(UserRepository userRepository, EmailManager emailManager) {
+    @Qualifier(UTC_CLOCK)
+    private final Clock clock;
 
-        this.userRepository = userRepository;
-        this.emailManager = emailManager;
-    }
 
     @Transactional
     public UserJSON save(UserInput input, com.util.enums.Language language) throws GeneralSecurityException {
@@ -55,7 +56,7 @@ public class UserService {
         final User user = UserMapper.inputToUser(input);
         final User result = saveUser(user, input, language);
 
-        LocalDateTime createdDate = LocalDateTime.now();
+        LocalDateTime createdDate = LocalDateTime.now(clock);
         user.setCreatedDate(createdDate);
 
         String validationKey = Crypt.encrypt(NanoIdUtils.randomNanoId(), AppResources.ENCRYPTION_KEY.value());

@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
  *  null = []
  *  ""   = []
  * </pre>
- *
  */
 
 @Converter
@@ -28,20 +27,21 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
 
     @Override
     public String convertToDatabaseColumn(List<String> stringList) {
-        if (stringList != null){
+        if (stringList != null) {
             return String.join(SPLIT_CHAR, stringList);
-        }
-        else{
+        } else {
             return null;
         }
     }
 
     @Override
     public List<String> convertToEntityAttribute(String input) {
-        if (input != null){
-            return Collections.list(new StringTokenizer(input.trim(), SPLIT_CHAR)).stream().map(token -> (String) token)
+        if (input != null) {
+            return Collections.list(new StringTokenizer(input.trim(), SPLIT_CHAR))
+                    .stream()
+                    .map(token -> (String) token)
                     .collect(Collectors.toList());
-        } else{
+        } else {
             return new ArrayList<>();
         }
     }
