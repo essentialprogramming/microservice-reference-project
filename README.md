@@ -3,17 +3,26 @@
 This project is inspired by the idea to quickly create a production ready project with all the required infrastructure at low cost yet with important security measures in place and ability to quickly scale in order to ship a quality product to early adopters. Ideal for quickly starting an app to validate ideas and scale if needed. The implementation includes code samples for different features. It uses Spring as the framework of choice because it provides a nice set of convenience features when bootstrapping and plugging together the application.
 
 ### 🌀 Prerequisites:
+By default, the project uses JDK 8, but will also work with JDK 11 and above.
+
+* **JDK**
+  - Oracle
+    - Java : http://www.oracle.com/technetwork/java/javase/downloads/index.html
+  - Adoptium
+    - Java : https://adoptium.net/temurin/releases
+ 
+  - RedHat
+    - Java : https://developers.redhat.com/products/openjdk/download
+* [Maven](https://maven.apache.org/)
 
 
-* [java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-* [maven](https://maven.apache.org/)
 ---------------
 ### 🌀 Build and run
 
 Build
 ---------------
-* Get the latest version from the git repository
-* Run: mvn clean install
+* Get the latest version from the git repository.
+* Run ` mvn clean install` to build the project.
 
 
 Run
@@ -33,12 +42,19 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 
 ---------------
 ### 🌀 DB Migration
-- change directory to 'db-migration'
-- run
+- Change directory to 'db-migration'
+- Run
 `mvn compile flyway:baseline; `
 `mvn compile flyway:migrate; `
 
 
+### 🌀 Developer Setup
+#### Enable lombok
+
+- https://projectlombok.org/setup/intellij
+- Verify that annotation processing is enabled in Intellij (`File` -> `Settings` -> `Build, Execution, and Deployment`
+  -> `Compiler` -> `Annotation Processers`)
+  
 ### 🌀 Usefull commands
     `mvn dependency:tree`
  
