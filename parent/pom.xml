@@ -60,6 +60,7 @@
             <version>3.4.4</version>
         </dependency>
 
+        <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -92,18 +93,22 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.4.0</version>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.22.0</version>
             <scope>test</scope>
         </dependency>
+
 
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.7</version>
         </dependency>
+
+        <!-- END JUnit 5 ... -->
 
         <!-- Jackson -->
         <dependency>
@@ -142,8 +147,12 @@
                     <groupId>org.apache.commons</groupId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>com.fasterxml.jackson.dataformat</artifactId>
-                    <groupId>jackson-dataformat-yaml</groupId>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-json-provider</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -159,6 +168,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.12.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>2.12.5</version>
         </dependency>
 
