@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import javax.annotation.security.RolesAllowed;
@@ -59,12 +60,12 @@ public class UserController {
     @Path("user")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Create user",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "Return user if successfully added",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = UserJSON.class)))
-            })
+    @Operation(summary = "Create user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Return user if successfully added",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserJSON.class)))
+    })
     @Anonymous
     public void createUser(@Valid UserInput userInput, @Suspended AsyncResponse asyncResponse) {
 
