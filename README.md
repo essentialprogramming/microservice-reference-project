@@ -60,4 +60,5 @@ Visit `localhost:8080/apidoc` to see the endpoints.
  
     `mvn dependency:tree -Dincludes=net.minidev:json-smart` //Filter the dependency tree
     
+     [depgraph-maven-plugin](https://github.com/ferstl/depgraph-maven-plugin) :
     `mvn com.github.ferstl:depgraph-maven-plugin:3.3.0:graph -DrepeatTransitiveDependenciesInTextGraph -DshowVersions -DgraphFormat=text -DshowGroupIds -DshowConflicts -DshowDuplicates`
