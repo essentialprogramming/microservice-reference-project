@@ -34,7 +34,7 @@ public class MurmurHash3 {
             long k = data[i] & 0xFF;
             k |= (data[i + 1] & 0xFF) << 8;
             k |= (data[i + 2] & 0xFF) << 16;
-            k |= (data[i + 3] & 0xFF) << 24;
+            k |= (long) (data[i + 3] & 0xFF) << 24;
 
             h = mix(h, k);
 

@@ -8,23 +8,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Example Usage:
  * <p>
- * return new JsonResponse()
- * .with("status", "ok")
- * .with("shouldRefresh", true)
- * .done();
+ *    return new JsonResponse()
+ *      .with("status", "ok")
+ *      .with("shouldRefresh", true)
+ *      .done();
  */
 public class JsonResponse extends LinkedHashMap<String, Object> {
     public static final long serialVersionUID = 1;
 
     public JsonResponse() {
+        super();
     }
 
-    public JsonResponse with(String key, Object value) {
+    public JsonResponse with(final String key, final Object value) {
         this.putIfAbsent(key, value);
         return this;
     }
 
-    public JsonResponse with(String key, JsonResponse value) {
+    public JsonResponse with(final String key, final JsonResponse value) {
         this.putIfAbsent(key, value);
         return this;
     }

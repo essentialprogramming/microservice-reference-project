@@ -43,7 +43,7 @@ class EncodingUtils {
     static String toHex(byte[] bytes) {
         byte[] hexChars = new byte[bytes.length * 2];
         for (int i = 0; i < bytes.length; i++) {
-            int octet = bytes[i] & 0xFF; //“& 0xFF” effectively masks the variable so it leaves only the value in the last 8 bits, and ignores all the rest of the bits.
+            int octet = bytes[i] & 0xFF; //“& 0xFF” effectively masks the variable, so it leaves only the value in the last 8 bits, and ignores all the rest of the bits.
             hexChars[i * 2] = HEX[octet >>> 4];
             hexChars[i * 2 + 1] = HEX[octet & 0x0F];
         }

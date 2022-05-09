@@ -17,6 +17,7 @@ import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
 import com.util.web.JsonResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import java.util.List;
 
 import static com.config.ClockConfig.UTC_CLOCK;
+import static com.config.ObjectMapperConfig.ObjectMapperProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EmailManager emailManager;
+    private final ObjectMapperProvider objectMapperProvider;
 
     @Qualifier(UTC_CLOCK)
     private final Clock clock;
@@ -88,6 +91,7 @@ public class UserService {
     }
 
 
+    @SneakyThrows
     @Transactional
     public UserJSON loadUser(String email, com.util.enums.Language language) throws ApiException {
 
@@ -95,7 +99,12 @@ public class UserService {
                 () -> new ApiException(Messages.get("USER.NOT.EXIST", language), HTTPCustomStatus.UNAUTHORIZED)
         );
 
-        logger.info("User with email={} loaded", email);
+        logger.info("User with email=`{}` loaded"
+                + System.getProperty("line.separator")
+                + objectMapperProvider.getObjectMapper()
+                         .writerWithDefaultPrettyPrinter()
+                         .writeValueAsString(user), email);
+
         return UserMapper.userToJson(user);
 
     }
@@ -127,7 +136,7 @@ public class UserService {
     @Transactional
     public Serializable deleteUser(final String email) {
         if (!userRepository.existsByEmail(email)) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "User with email " + email +  " not found!");
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "User with email " + email + " not found!");
         }
 
         userRepository.deleteUserByEmail(email);

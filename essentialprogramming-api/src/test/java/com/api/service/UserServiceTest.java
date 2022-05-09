@@ -11,6 +11,7 @@ import com.internationalization.Messages;
 import com.spring.ApplicationContextFactory;
 import com.util.enums.Language;
 import com.util.exceptions.ApiException;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
@@ -28,6 +29,7 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.mockito.stubbing.Answer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,7 @@ import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
+@Slf4j
 public class UserServiceTest {
 
     private final SoftAssertions softAssertions = new SoftAssertions();
@@ -68,7 +71,15 @@ public class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-
+        lenient()
+                .doAnswer(
+                        (Answer<Void>) invocation -> {
+                            log.info("Sending email to {}", invocation.getArguments()[0]);
+                            return null;
+                        }
+                )
+                .when(emailManager)
+                .send(any(), any(), any(), any(), any());
     }
 
     @AfterEach
