@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ObjectMapperConfig {
+    private static final String BASE_PACKAGE = "com.config";
+    private static final String BEAN_OBJECT_MAPPER = BASE_PACKAGE + ".objectMapper";
 
     private static final ThreadLocal<ObjectMapper> objectMapper = ThreadLocal
             .withInitial(() -> new ObjectMapper()
@@ -18,7 +20,7 @@ public class ObjectMapperConfig {
                     .configure(SerializationFeature.INDENT_OUTPUT, true)
                     .registerModule(new JavaTimeModule()));
 
-    @Bean
+    @Bean(BEAN_OBJECT_MAPPER)
     public ObjectMapperProvider objectMapperProvider() {
         return objectMapper::get;
     }

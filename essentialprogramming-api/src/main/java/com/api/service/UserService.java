@@ -15,6 +15,7 @@ import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
+import com.util.io.FileInputResource;
 import com.util.web.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.time.Clock;
@@ -48,6 +50,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailManager emailManager;
     private final ObjectMapperProvider objectMapperProvider;
+    private final UserReaderService userReaderService;
 
     @Qualifier(UTC_CLOCK)
     private final Clock clock;
@@ -105,8 +108,16 @@ public class UserService {
                          .writerWithDefaultPrettyPrinter()
                          .writeValueAsString(user), email);
 
+        final User userFromFile = getUserFromFile(); //Test loading data from file
+
         return UserMapper.userToJson(user);
 
+    }
+
+    private User getUserFromFile() throws IOException {
+        try (final FileInputResource fileInputResource = new FileInputResource("classpath:testdata/user.json")) {
+            return userReaderService.readUser(fileInputResource.getInputStream());
+        }
     }
 
 

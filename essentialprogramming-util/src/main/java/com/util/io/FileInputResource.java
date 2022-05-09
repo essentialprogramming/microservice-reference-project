@@ -1,10 +1,8 @@
 package com.util.io;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 
 public class FileInputResource implements InputResource, AutoCloseable {
@@ -34,6 +32,12 @@ public class FileInputResource implements InputResource, AutoCloseable {
         }
     }
 
+    public String getText() throws IOException {
+        try (final InputStream inputStream = getInputStream()) {
+            return new String(readStream(inputStream), StandardCharsets.UTF_8);
+        }
+    }
+
     /**
      * Converts an input stream into a byte array.
      */
@@ -56,6 +60,5 @@ public class FileInputResource implements InputResource, AutoCloseable {
         if (inputStream != null) {
             inputStream.close();
         }
-
     }
 }
