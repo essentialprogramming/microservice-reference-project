@@ -108,7 +108,12 @@ public class UserService {
                          .writerWithDefaultPrettyPrinter()
                          .writeValueAsString(user), email);
 
-        final User userFromFile = getUserFromFile(); //Test loading data from file
+        //-------------Test block----------------------
+        //final User userFromFile = getUserFromFile(); //Test loading data from file
+        //try (final FileInputResource fileInputResource = new FileInputResource("classpath:testdata/user.json")) {
+             //System.out.println(userReaderService.read(fileInputResource.getInputStream()));
+        //}
+        //-------------End test block-------------------
 
         return UserMapper.userToJson(user);
 

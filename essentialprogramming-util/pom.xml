@@ -128,21 +128,45 @@
 
         <!-- JAXB API only -->
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.0</version>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
 
         <!-- JAXB Implementation -->
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>3.0.2</version>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.1</version>
             <scope>runtime</scope>
         </dependency>
 
 
+
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Java_11_Or_Above</id>
+            <dependencies>
+                <!-- JAXB API v3.0.1 -->
+                <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                    <version>3.0.1</version>
+                </dependency>
+
+                <!-- JAXB v3.0.2 reference implementation (curiously with com.sun coordinates) -->
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                    <version>3.0.2</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+
+        </profile>
+    </profiles>
 
     <build>
         <finalName>${project.artifactId}</finalName>

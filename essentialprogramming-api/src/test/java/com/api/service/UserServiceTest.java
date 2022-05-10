@@ -5,7 +5,9 @@ import com.api.entities.User;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.repository.UserRepository;
+import com.config.ObjectMapperConfig;
 import com.email.service.EmailManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
 import com.spring.ApplicationContextFactory;
@@ -37,6 +39,8 @@ import java.security.GeneralSecurityException;
 import java.time.Clock;
 import java.util.Optional;
 
+import static com.config.ObjectMapperConfig.ObjectMapperProvider;
+
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
@@ -60,6 +64,9 @@ public class UserServiceTest {
 
     @Spy
     private final Clock clock = Clock.systemUTC();
+
+    @Mock
+    private ObjectMapperProvider objectMapperProvider;
 
 
     @BeforeAll
@@ -119,6 +126,7 @@ public class UserServiceTest {
         final User user = createUser();
 
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        when(objectMapperProvider.getObjectMapper()).thenReturn(new ObjectMapper());
 
         //when
         UserJSON userJSON = userService.loadUser(any(), any());

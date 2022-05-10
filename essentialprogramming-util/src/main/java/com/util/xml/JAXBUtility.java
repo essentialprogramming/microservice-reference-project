@@ -1,7 +1,6 @@
 package com.util.xml;
 
-import jakarta.xml.bind.*;
-
+import javax.xml.bind.*;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;

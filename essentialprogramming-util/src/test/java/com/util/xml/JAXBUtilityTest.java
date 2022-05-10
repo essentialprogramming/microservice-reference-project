@@ -1,8 +1,9 @@
 package com.util.xml;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.*;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
