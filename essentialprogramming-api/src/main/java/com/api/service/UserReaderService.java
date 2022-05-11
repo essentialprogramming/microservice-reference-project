@@ -23,6 +23,11 @@ public class UserReaderService {
     }
 
     public Map<String, Object> read(final InputStream inputStream) throws IOException {
-        return objectMapperProvider.getObjectMapper().readValue(inputStream, new TypeReference<Map<String, Object>>() {});
+        return objectMapperProvider.getObjectMapper().readValue(inputStream, new TypeReference<Map<String, Object>>() {
+        });
+    }
+
+    public <T> T read(final InputStream inputStream, final Class<T> type) throws IOException {
+        return objectMapperProvider.getObjectMapper().readValue(inputStream, type);
     }
 }

@@ -29,7 +29,5 @@ public class JAXBUtilityTest {
     static class TestPojo {
         String firstName;
         String lastName;
-
-
     }
 }
