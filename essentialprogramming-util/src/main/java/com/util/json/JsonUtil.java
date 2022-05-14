@@ -96,7 +96,13 @@ public class JsonUtil {
         }
     }
 
-    public static <T> Map<String, Object> getProperties(final T object) throws JsonProcessingException {
+    /**
+     * Map bean properties to a map with property name as key, and value "native" representation
+     * of property: a Map, List, Boolean, Integer/Long, Float/Double, Date/LocalDateTime
+     * or null (referenced POJOs being recursively "serialized" as one of these types, as necessary)
+     *
+     */
+    public static <T> Map<String, Object> map(final T object) throws JsonProcessingException {
         return createObjectMapper().convertValue(object, new TypeReference<Map<String, Object>>() {
         });
     }

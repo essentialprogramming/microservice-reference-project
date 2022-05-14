@@ -1,8 +1,6 @@
 package com.util.collection;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class MapUtils {
@@ -24,4 +22,17 @@ public class MapUtils {
 
         return Stream.of(entry);
     }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        final List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort((o1, o2) -> o1.getValue().compareTo(o2.getValue()));
+
+        final Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+    }
+
 }
