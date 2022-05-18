@@ -1,6 +1,8 @@
 package com.server;
 
 import javax.servlet.ServletException;
+
+import com.api.config.SplashMessage;
 import com.undertow.standalone.UndertowServer;
 
 import static com.util.cloud.Environment.getProperty;
@@ -11,6 +13,8 @@ public class Server {
 
     public static void main(String[] args)
             throws ServletException {
+
+        SplashMessage.printSplash();
 
         configureLog4j();
 
