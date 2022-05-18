@@ -1,4 +1,4 @@
-package com.api.config;
+package com.config;
 
 import com.util.io.FileInputResource;
 
@@ -9,7 +9,7 @@ public class SplashMessage {
     private static final String fileName = "splash/banner.txt";
 
     public static void printSplash() {
-        System.out.println(getMessage() + "\n");
+        System.out.println(getMessage() + System.lineSeparator());
     }
 
     private static String getMessage() {
