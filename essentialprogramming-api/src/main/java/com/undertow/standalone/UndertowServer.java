@@ -80,6 +80,11 @@ public final class UndertowServer {
                                 .addMapping("/api/auth/*")
                                 .setLoadOnStartup(1)
                                 .setAsyncSupported(true),
+                        servlet("jobServlet", ServletContainer.class)
+                                .addInitParam("javax.ws.rs.Application", com.config.ApplicationConfig.class.getName())
+                                .addMapping("/api/jobs/*")
+                                .setLoadOnStartup(1)
+                                .setAsyncSupported(true),
                         servlet("loginServlet", LoginServlet.class)
                                 .addMapping("/auth/sign-in/*")
                                 .setLoadOnStartup(1)
