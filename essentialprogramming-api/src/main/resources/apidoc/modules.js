@@ -6,5 +6,9 @@ let apiEndpoints = [
     {
         url: '../api/auth/openapi',
         name: 'Authenticate Api'
+    },
+    {
+        url: '../api/jobs/openapi',
+        name: 'Jobs API'
     }
 ];
