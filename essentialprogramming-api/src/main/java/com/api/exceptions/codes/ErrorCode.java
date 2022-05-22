@@ -4,27 +4,27 @@ package com.api.exceptions.codes;
 import com.util.exceptions.ErrorCodes;
 
 /**
- * Error code enum for authentication process.
+ * Error code enum.
  *
  */
 public enum ErrorCode implements ErrorCodes.ErrorCode {
 
 
-    USER_NOT_FOUND(1, "User not found"),;
+    USER_NOT_FOUND("MICRO-SERVICE-ERR1", "User not found"),;
 
     static {
         ErrorCodes.registerErrorCodes(ErrorCode.class);
     }
 
-    private final long code;
+    private final String code;
     private final String description;
 
-    ErrorCode(long code, String description) {
+    ErrorCode(final String code, final String description) {
         this.code = code;
         this.description = description;
     }
 
-    public long getCode() {
+    public String getCode() {
         return this.code;
     }
 

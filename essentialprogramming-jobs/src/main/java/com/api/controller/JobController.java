@@ -5,7 +5,6 @@ import com.api.service.JobService;
 import com.exception.ExceptionHandler;
 import com.util.async.Computation;
 import com.util.async.ExecutorsProvider;
-import com.util.web.JsonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,10 +38,11 @@ public class JobController {
     public void enqueueJob(@Suspended AsyncResponse asyncResponse) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
-        Computation.computeAsync(jobService::enqueueJob, executorService)
+        Computation.computeAsync(jobService::enqueueProgressJob, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
     }
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,7 +55,7 @@ public class JobController {
     public void scheduleJob(@Suspended AsyncResponse asyncResponse, @QueryParam("time") @Schema(example = "16/05/2022 16:00:00") String dateTime) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
-        Computation.computeAsync(()-> jobService.schedule(dateTime), executorService)
+        Computation.computeAsync(()-> jobService.scheduleDemoJob(dateTime), executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
     }

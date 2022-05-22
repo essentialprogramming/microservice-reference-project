@@ -1,41 +1,51 @@
 package com.api.service;
 
 import com.api.enums.CronEnum;
-import com.api.service.jobs.SleepJob;
+import com.api.service.jobs.DemoJob;
+import com.api.service.jobs.execution.JobRunner;
+import com.api.service.jobs.ProgressJob;
 import com.util.web.JsonResponse;
 import lombok.RequiredArgsConstructor;
+import org.jobrunr.jobs.JobId;
 import org.jobrunr.jobs.context.JobContext;
-import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.scheduling.cron.Cron;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.UUID;
-
+import static com.api.service.jobs.DemoJob.Model;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class JobService {
 
-    public JsonResponse enqueueJob() {
-        BackgroundJob.enqueue(() -> SleepJob.executeJob(JobContext.Null));
+    private final JobRunner jobRunner;
+    private final ProgressJob progressJob;
+    private final DemoJob demoJob;
+
+    public JsonResponse enqueueProgressJob() {
+        final JobId jobId = jobRunner.enqueueJob(() ->
+                progressJob.execute(progressJob.getName(), 100000000, JobContext.Null)
+        );
         return new JsonResponse()
                 .with("Status", "ok")
+                .with("JobId", jobId.toString())
                 .with("Message", "Job enqueued successfully!")
                 .done();
     }
 
-    public JsonResponse schedule(final String dateTime) {
-        ZonedDateTime dateAndTime = parseTime(dateTime);
-        BackgroundJob.schedule(dateAndTime, () -> SleepJob.executeJob(JobContext.Null));
+
+    public JsonResponse scheduleDemoJob(final String dateTime) {
+        final JobId jobId = jobRunner.scheduleForExecution(dateTime, () ->
+                demoJob.execute(
+                        demoJob.getName(),
+                        Model.builder().name("demo").build(),
+                        JobContext.Null
+                ));
         return new JsonResponse()
                 .with("Status", "ok")
+                .with("JobId", jobId.toString())
                 .with("Message", "Job scheduled successfully!")
                 .done();
     }
@@ -64,16 +74,13 @@ public class JobService {
     }
 
     private void createCronJob(final String cron) {
-        BackgroundJob.scheduleRecurrently(String.valueOf(UUID.randomUUID()), cron, () -> SleepJob.executeJob(JobContext.Null));
+        jobRunner.scheduleRecurrently(cron,
+                () -> demoJob.execute(
+                        demoJob.getName(),
+                        Model.builder().name("demo").build(),
+                        JobContext.Null
+                )
+        );
     }
 
-    private ZonedDateTime parseTime(final String dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").withZone(ZoneId.of("Europe/Bucharest"));
-
-        try {
-            return ZonedDateTime.parse(dateTime, formatter);
-        } catch (DateTimeParseException e) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid date and time format! Must be of format: dd/MM/yyyy HH:mm:ss");
-        }
-    }
 }

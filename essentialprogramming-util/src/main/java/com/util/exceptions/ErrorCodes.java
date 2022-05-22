@@ -12,7 +12,7 @@ public class ErrorCodes {
         /**
          * Get the error code.
          */
-        long getCode();
+        String getCode();
 
         /**
          * Get the error description.
@@ -21,7 +21,7 @@ public class ErrorCodes {
 
     }
 
-    private static final Map<Long, ErrorCode> messages = new HashMap<>();
+    private static final Map<String, ErrorCode> messages = new HashMap<>();
 
 
     /**
@@ -35,9 +35,11 @@ public class ErrorCodes {
         EnumSet.allOf(clazz).forEach(error -> messages.put(((ErrorCode) error).getCode(), (ErrorCode) error));
     }
 
-    public static String getMessage(long key) {
+    public static String getMessage(String key) {
         return messages.get(key).getDescription();
     }
 
-
+    public static Map<String, ErrorCode> getMessages() {
+        return messages;
+    }
 }
