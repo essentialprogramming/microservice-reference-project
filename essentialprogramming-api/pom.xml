@@ -22,12 +22,6 @@
             <version>2.35</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-bean-validation</artifactId>
-            <version>2.35</version>
-        </dependency>
-
         <!--project-->
         <dependency>
             <groupId>com.essentialprogramming</groupId>
@@ -190,7 +184,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
 
