@@ -1,9 +1,10 @@
 package com.util.objects;
 
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
+
+import lombok.NonNull;
+
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public final class ConditionChecker {
@@ -21,12 +22,10 @@ public final class ConditionChecker {
      * @return The given object, once it has been guaranteed non-null.
      * @throws IllegalArgumentException when {@code obj} is null
      */
-    @EnsuresNonNull("#1")
     public static <T> @NonNull T assertNotNull(final @Nullable T obj, final String objectName) {
         return assertNotNull(obj, objectName, null);
     }
 
-    @EnsuresNonNull("#1")
     public static <T> @NonNull T assertNotNull(final @Nullable T reference, final String objectName, final @Nullable String errorMessage) {
         if (reference == null) {
             Objects.requireNonNull(objectName);

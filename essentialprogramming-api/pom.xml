@@ -60,13 +60,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
-            <scope>provided</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -225,6 +218,7 @@
                                 <exclude>META-INF/*.SF</exclude>
                                 <exclude>META-INF/*.DSA</exclude>
                                 <exclude>META-INF/*.RSA</exclude>
+                                <exclude>**/Log4j2Plugins.dat</exclude>
                             </excludes>
                         </filter>
                     </filters>

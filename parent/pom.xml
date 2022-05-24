@@ -12,9 +12,9 @@
 	    <build.number>SNAPSHOT</build.number>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>1.8</java-version>
-        <io.undertow.version>2.2.14.Final</io.undertow.version>
+        <io.undertow.version>2.2.17.Final</io.undertow.version>
         <org.glassfish.jersey.version>2.35</org.glassfish.jersey.version>
-        <org.jboss.weld.version>3.1.8.Final</org.jboss.weld.version>
+        <org.jboss.weld.version>3.1.9.Final</org.jboss.weld.version>
         <el-api.version>3.0.0</el-api.version>
         <io.swagger.version>2.0.6</io.swagger.version>
         <com.fasterxml.jackson.version>2.12.5</com.fasterxml.jackson.version>
@@ -22,7 +22,7 @@
         <org.springframework.version>5.2.19.RELEASE</org.springframework.version>
         <org.spring-security.version>5.6.1</org.spring-security.version>
         <org.spring-data.version>2.3.9.RELEASE</org.spring-data.version>
-        <hibernate.version>5.6.3.Final</hibernate.version>
+        <hibernate.version>5.6.9.Final</hibernate.version>
         <log4j.version>2.17.1</log4j.version>
     </properties>
 
@@ -135,6 +135,14 @@
             <version>${com.fasterxml.jackson.version}</version>
         </dependency>
 
+        <!-- Project lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- Swagger -->
         <dependency>
@@ -153,6 +161,10 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.jaxrs</groupId>
                     <artifactId>jackson-jaxrs-json-provider</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -177,6 +189,14 @@
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>2.12.5</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+        </dependency>
+
 
 
         <dependency>
