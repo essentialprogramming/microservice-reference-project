@@ -8,7 +8,7 @@ let apiEndpoints = [
         name: 'Authenticate Api'
     },
     {
-        url: '../api/jobs/openapi',
+        url: '../v1/api/jobs/openapi',
         name: 'Jobs API'
     }
 ];

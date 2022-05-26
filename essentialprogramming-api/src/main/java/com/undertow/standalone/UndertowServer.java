@@ -5,6 +5,8 @@ import static io.undertow.servlet.Servlets.defaultContainer;
 import static io.undertow.servlet.Servlets.deployment;
 import static io.undertow.servlet.Servlets.servlet;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -14,6 +16,9 @@ import com.api.controller.DemoQuizServlet;
 import com.api.controller.LoginServlet;
 import com.authentication.config.ApplicationConfig;
 
+import com.config.proxy.ReverseProxyClient;
+import com.google.common.collect.ImmutableMap;
+import io.undertow.server.handlers.proxy.ProxyHandler;
 import io.undertow.servlet.api.InstanceFactory;
 import io.undertow.servlet.api.ListenerInfo;
 import io.undertow.servlet.util.ImmediateInstanceFactory;
@@ -82,7 +87,7 @@ public final class UndertowServer {
                                 .setAsyncSupported(true),
                         servlet("jobServlet", ServletContainer.class)
                                 .addInitParam("javax.ws.rs.Application", com.config.ApplicationConfig.class.getName())
-                                .addMapping("/api/jobs/*")
+                                .addMapping("/v1/api/jobs/*")
                                 .setLoadOnStartup(1)
                                 .setAsyncSupported(true),
                         servlet("loginServlet", LoginServlet.class)
@@ -123,17 +128,17 @@ public final class UndertowServer {
 
         LOCK.lock();
 
+        final ReverseProxyClient proxyClient = new ReverseProxyClient(httpHandler);
+
         server = Undertow.builder()
                    .addHttpListener(port, host)
                    .setHandler(shutdown)
+                   .setHandler(ProxyHandler.builder().setProxyClient(proxyClient).setMaxRequestTime(30000).build())
                    .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                    .build();
-
         server.start();
-        
         LOCK.unlock();
     }
-
 
     public void stop() {
         server.stop();

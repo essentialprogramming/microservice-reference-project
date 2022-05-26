@@ -20,7 +20,7 @@ import javax.ws.rs.ApplicationPath;
  * JAX-RS application configuration class.
  */
 
-@ApplicationPath("/api/jobs")
+@ApplicationPath("/v1/api/jobs")
 public class ApplicationConfig extends ResourceConfig {
 
     public ApplicationConfig() {
