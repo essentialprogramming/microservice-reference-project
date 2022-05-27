@@ -27,3 +27,5 @@ node_modules
 # Generated files
 bundle.es6.js
 bundle.js
+bundle.es6.js.map
+bundle.js.map
