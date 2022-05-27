@@ -13,6 +13,7 @@ import com.crypto.PasswordHash;
 import com.email.service.EmailManager;
 import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
+import com.util.annotations.LogExecutionTime;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
 import com.util.io.FileInputResource;
@@ -39,6 +40,8 @@ import java.util.List;
 
 import static com.config.ClockConfig.UTC_CLOCK;
 import static com.config.ObjectMapperConfig.ObjectMapperProvider;
+import static com.util.collection.MapUtils.flatMap;
+import static com.util.json.JsonUtil.map;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +99,7 @@ public class UserService {
 
     @SneakyThrows
     @Transactional
+    @LogExecutionTime
     public UserJSON loadUser(String email, com.util.enums.Language language) throws ApiException {
 
         final User user = userRepository.findByEmail(email).orElseThrow(
@@ -107,6 +111,8 @@ public class UserService {
                 + objectMapperProvider.getObjectMapper()
                          .writerWithDefaultPrettyPrinter()
                          .writeValueAsString(user), email);
+
+        Map<String,Object> map = flatMap(map(user));
 
         //-------------Test block----------------------
         //final User userFromFile = getUserFromFile(); //Test loading data from file

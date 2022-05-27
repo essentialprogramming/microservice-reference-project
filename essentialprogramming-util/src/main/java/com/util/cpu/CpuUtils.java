@@ -1,6 +1,6 @@
 package com.util.cpu;
 
-public class CPUUtils {
+public class CpuUtils {
 
     private static final Runtime RUNTIME = Runtime.getRuntime();
 
@@ -23,7 +23,7 @@ public class CPUUtils {
 
      */
     public static int percentageAvailableMemory() {
-        return (int) ((CPUUtils.availableMemory() * 100) / Runtime.getRuntime().maxMemory());
+        return (int) ((CpuUtils.availableMemory() * 100) / Runtime.getRuntime().maxMemory());
     }
 
     /**
