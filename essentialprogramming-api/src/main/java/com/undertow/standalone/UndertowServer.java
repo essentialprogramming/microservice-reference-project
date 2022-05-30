@@ -5,27 +5,21 @@ import static io.undertow.servlet.Servlets.defaultContainer;
 import static io.undertow.servlet.Servlets.deployment;
 import static io.undertow.servlet.Servlets.servlet;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletException;
-
-import com.api.controller.DemoQuizServlet;
-import com.api.controller.LoginServlet;
-import com.authentication.config.ApplicationConfig;
-
-import com.config.proxy.ReverseProxyClient;
-import com.google.common.collect.ImmutableMap;
-import io.undertow.server.handlers.proxy.ProxyHandler;
-import io.undertow.servlet.api.InstanceFactory;
-import io.undertow.servlet.api.ListenerInfo;
-import io.undertow.servlet.util.ImmediateInstanceFactory;
-
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.server.Server;
+import com.api.controller.DemoQuizServlet;
+import com.api.controller.LoginServlet;
+import com.authentication.config.ApplicationConfig;
+import com.config.proxy.ReverseProxyClient;
+
+import io.undertow.servlet.api.InstanceFactory;
+import io.undertow.servlet.api.ListenerInfo;
+import io.undertow.servlet.util.ImmediateInstanceFactory;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
@@ -33,7 +27,9 @@ import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.GracefulShutdownHandler;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.ResponseCodeHandler;
 import io.undertow.server.handlers.StuckThreadDetectionHandler;
+import io.undertow.server.handlers.proxy.ProxyHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.servlet.api.DeploymentInfo;
@@ -125,15 +121,18 @@ public final class UndertowServer {
         final HttpHandler httpHandler = bootstrap();
         final StuckThreadDetectionHandler stuck = new StuckThreadDetectionHandler(getProperty("THREAD_EXECUTION_TIME", 700), httpHandler);
         final GracefulShutdownHandler shutdown = Handlers.gracefulShutdown(stuck);
+        final ReverseProxyClient proxyClient = new ReverseProxyClient(shutdown);
 
         LOCK.lock();
-
-        final ReverseProxyClient proxyClient = new ReverseProxyClient(httpHandler);
-
         server = Undertow.builder()
                    .addHttpListener(port, host)
-                   .setHandler(shutdown)
-                   .setHandler(ProxyHandler.builder().setProxyClient(proxyClient).setMaxRequestTime(30000).build())
+                   .setHandler(ProxyHandler.builder()
+                           .setProxyClient(proxyClient)
+                           .setMaxRequestTime(30000)
+                           .setReuseXForwarded(true)
+                           .setNext(ResponseCodeHandler.HANDLE_404)
+                           .build()
+                   )
                    .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                    .build();
         server.start();

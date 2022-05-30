@@ -39,6 +39,13 @@
         <AsyncLogger name="org.hibernate.SQL" level="DEBUG">
         </AsyncLogger>
 
+        <AsyncLogger name="org.jobrunr" level="DEBUG">
+        </AsyncLogger>
+
+        <AsyncLogger name="io.undertow.proxy" level="OFF">
+        </AsyncLogger>
+
+
         <!-- pattern layout actually uses location, so we need to include it -->
         <AsyncLogger name="com.api" level="DEBUG" includeLocation="true">
         </AsyncLogger>
