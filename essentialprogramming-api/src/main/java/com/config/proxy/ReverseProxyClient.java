@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.xnio.OptionMap;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,9 +22,10 @@ public class ReverseProxyClient implements ProxyClient {
 
     private final UndertowClient client;
     private final HttpHandler defaultHttpHandler;
-
     private final List<String> dashboardPaths = Arrays.asList("/dashboard", "/api/servers", "/api/problems",
             "/api/version", "/api/jobs", "/api/recurring-jobs", "/sse");
+
+    private String dashboardUrl = "http://localhost:1000";
 
 
     public ReverseProxyClient(HttpHandler defaultHttpHandler) {
@@ -43,17 +43,14 @@ public class ReverseProxyClient implements ProxyClient {
     public void getConnection(ProxyTarget target, HttpServerExchange exchange, ProxyCallback<ProxyConnection> callback, long timeout, TimeUnit timeUnit) {
 
         if (dashboardPaths.stream().anyMatch(path -> exchange.getRequestPath().startsWith(path))) {
-            try {
-                client.connect(
-                        new ConnectNotifier(callback, exchange),
-                        new URI("http://localhost:1000"),
-                        exchange.getIoThread(),
-                        exchange.getConnection().getByteBufferPool(),
-                        OptionMap.EMPTY);
-
-            } catch (URISyntaxException e) {
-                log.error("Failed to proxy {}", exchange.getRequestPath());
-            }
+            dashboardUrl += exchange.getRequestURI();
+            
+            client.connect(
+                    new ConnectNotifier(callback, exchange),
+                    URI.create(dashboardUrl),
+                    exchange.getIoThread(),
+                    exchange.getConnection().getByteBufferPool(),
+                    OptionMap.EMPTY);
         } else {
             exchange.dispatch(defaultHttpHandler);
         }

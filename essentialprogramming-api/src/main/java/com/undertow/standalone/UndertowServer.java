@@ -128,7 +128,6 @@ public final class UndertowServer {
                    .addHttpListener(port, host)
                    .setHandler(ProxyHandler.builder()
                            .setProxyClient(proxyClient)
-                           .setMaxRequestTime(30000)
                            .setReuseXForwarded(true)
                            .setNext(ResponseCodeHandler.HANDLE_404)
                            .build()
