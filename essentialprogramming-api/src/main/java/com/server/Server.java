@@ -2,7 +2,6 @@ package com.server;
 
 import javax.servlet.ServletException;
 
-import com.config.SplashMessage;
 import com.undertow.standalone.UndertowServer;
 
 import static com.config.SplashMessage.printSplash;

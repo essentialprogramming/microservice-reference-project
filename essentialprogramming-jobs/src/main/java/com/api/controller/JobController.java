@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.jobrunr.configuration.JobRunr;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -74,5 +75,22 @@ public class JobController {
         Computation.computeAsync(() -> jobService.scheduleJobRecurrently(cron), executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("restart")
+    @Operation(summary = "Restart background job server", description = "Restart background job server",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Returns 200 if background job server started successfully")
+            }
+    )
+    public void start(@Suspended AsyncResponse asyncResponse) {
+
+        JobRunr.getBackgroundJobServer().stop();
+        JobRunr.getBackgroundJobServer().start();
+
+        asyncResponse.resume(Response.status(200).build());
+
     }
 }
