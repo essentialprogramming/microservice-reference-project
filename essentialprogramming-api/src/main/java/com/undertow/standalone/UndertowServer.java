@@ -5,10 +5,13 @@ import static io.undertow.servlet.Servlets.defaultContainer;
 import static io.undertow.servlet.Servlets.deployment;
 import static io.undertow.servlet.Servlets.servlet;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletException;
+
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.server.Server;
@@ -27,7 +30,6 @@ import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.GracefulShutdownHandler;
 import io.undertow.server.handlers.PathHandler;
-import io.undertow.server.handlers.ResponseCodeHandler;
 import io.undertow.server.handlers.StuckThreadDetectionHandler;
 import io.undertow.server.handlers.proxy.ProxyHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
@@ -115,25 +117,33 @@ public final class UndertowServer {
         return pathHandler;
     }
 
+    private HttpHandler createProxyHandler(final HttpHandler defaultHttpHandler) {
+        final String jobRunnerDashboardUrl = "http://localhost:1000";
+        final List<String> dashboardPaths = Arrays.asList("/dashboard", "/api/servers", "/api/problems",
+                "/api/version", "/api/jobs", "/api/recurring-jobs", "/sse");
+
+        final ReverseProxyClient proxyClient = new ReverseProxyClient(jobRunnerDashboardUrl, dashboardPaths, defaultHttpHandler);
+        return ProxyHandler.builder()
+                .setProxyClient(proxyClient)
+                .setReuseXForwarded(true)
+                .setNext(defaultHttpHandler)
+                .build();
+    }
+
 
     public void start() throws ServletException {
 
         final HttpHandler httpHandler = bootstrap();
         final StuckThreadDetectionHandler stuck = new StuckThreadDetectionHandler(getProperty("THREAD_EXECUTION_TIME", 700), httpHandler);
         final GracefulShutdownHandler shutdown = Handlers.gracefulShutdown(stuck);
-        final ReverseProxyClient proxyClient = new ReverseProxyClient(shutdown);
+        final HttpHandler proxyHandler = createProxyHandler(shutdown);
 
         LOCK.lock();
         server = Undertow.builder()
-                   .addHttpListener(port, host)
-                   .setHandler(ProxyHandler.builder()
-                           .setProxyClient(proxyClient)
-                           .setReuseXForwarded(true)
-                           .setNext(ResponseCodeHandler.HANDLE_404)
-                           .build()
-                   )
-                   .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
-                   .build();
+                .addHttpListener(port, host)
+                .setHandler(proxyHandler)
+                .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
+                .build();
         server.start();
         LOCK.unlock();
     }

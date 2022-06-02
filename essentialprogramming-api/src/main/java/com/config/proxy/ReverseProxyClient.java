@@ -1,6 +1,8 @@
 package com.config.proxy;
 
 
+import io.undertow.client.ClientCallback;
+import io.undertow.client.ClientConnection;
 import io.undertow.client.UndertowClient;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -11,48 +13,62 @@ import lombok.extern.slf4j.Slf4j;
 import org.xnio.OptionMap;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ReverseProxyClient implements ProxyClient {
 
-    private static final ProxyTarget TARGET = new ProxyTarget() {};
-
+    private final String targetUrl;
+    private final List<String> apiPaths;
     private final UndertowClient client;
     private final HttpHandler defaultHttpHandler;
-    private final List<String> dashboardPaths = Arrays.asList("/dashboard", "/api/servers", "/api/problems",
-            "/api/version", "/api/jobs", "/api/recurring-jobs", "/sse");
 
-    private String dashboardUrl = "http://localhost:1000";
+    private static final ProxyTarget TARGET = new ProxyTarget() {
+    };
 
 
-    public ReverseProxyClient(HttpHandler defaultHttpHandler) {
-        this.client = UndertowClient.getInstance();
+    public ReverseProxyClient(final String targetUrl, final List<String> paths, final HttpHandler defaultHttpHandler) {
+        log.info("Initializing Proxy client...");
+
+        this.targetUrl = targetUrl;
+        this.apiPaths = paths;
         this.defaultHttpHandler = defaultHttpHandler;
-        log.info("Proxy client started...");
+        this.client = UndertowClient.getInstance();
+
     }
 
     @Override
-    public ProxyTarget findTarget(HttpServerExchange exchange) {
+    public ProxyTarget findTarget(final HttpServerExchange exchange) {
+        if (apiPaths.stream().noneMatch(path -> exchange.getRequestPath().startsWith(path))) {
+            return null;
+        }
         return TARGET;
     }
 
     @Override
-    public void getConnection(ProxyTarget target, HttpServerExchange exchange, ProxyCallback<ProxyConnection> callback, long timeout, TimeUnit timeUnit) {
+    public void getConnection(final ProxyTarget target,
+                              final HttpServerExchange exchange,
+                              final ProxyCallback<ProxyConnection> callback,
+                              final long timeout,
+                              final TimeUnit timeUnit) {
 
-        if (dashboardPaths.stream().anyMatch(path -> exchange.getRequestPath().startsWith(path))) {
-            dashboardUrl += exchange.getRequestURI();
-            
-            client.connect(
-                    new ConnectNotifier(callback, exchange),
-                    URI.create(dashboardUrl),
-                    exchange.getIoThread(),
-                    exchange.getConnection().getByteBufferPool(),
-                    OptionMap.EMPTY);
-        } else {
+        //No proxy needed ( default case )
+        if (apiPaths.stream().noneMatch(path -> exchange.getRequestPath().startsWith(path))) {
             exchange.dispatch(defaultHttpHandler);
         }
+
+        final String targetUri = targetUrl + exchange.getRequestURI();
+        final ClientCallback<ClientConnection> clientCallback = exchange.getRequestPath().contains("/sse")
+                ? new ConnectNotifierSse(callback, exchange)
+                : new ConnectNotifier(callback, exchange);
+
+        exchange.setRelativePath(exchange.getRequestPath()); // need this otherwise proxy forwards to chopped off path
+        client.connect(
+                clientCallback,
+                URI.create(targetUri),
+                exchange.getIoThread(),
+                exchange.getConnection().getByteBufferPool(),
+                OptionMap.EMPTY);
     }
 }
