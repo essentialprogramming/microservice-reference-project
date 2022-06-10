@@ -28,7 +28,7 @@ public class LogTimeAspect {
     public Object logExecutionTime(final ProceedingJoinPoint joinPoint) throws Throwable {
 
         val result = measureTimedValue(joinPoint::proceed);
-        final String serviceMethodName = format(
+        final String methodNameAndParameters = format(
                 "%s.%s(%s)",
                 joinPoint.getSignature().getDeclaringType().getSimpleName(),
                 joinPoint.getSignature().getName(),
@@ -38,7 +38,7 @@ public class LogTimeAspect {
                         .collect(Collectors.joining(", "))
         );
 
-        log.info("Executed {} in {}", serviceMethodName, prettyPrint(result.getDuration()));
+        log.info("Executed {} in {}", methodNameAndParameters, prettyPrint(result.getDuration()));
         return result.getValue();
     }
 
