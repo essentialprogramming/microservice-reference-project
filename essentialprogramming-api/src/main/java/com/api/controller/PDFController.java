@@ -6,6 +6,7 @@ import com.api.service.UserService;
 import com.api.template.Templates;
 import com.template.service.TemplateService;
 import com.exception.ExceptionHandler;
+import com.util.annotations.ApiErrorResponses;
 import com.util.async.Computation;
 import com.util.async.ExecutorsProvider;
 import com.util.exceptions.ApiException;
@@ -36,6 +37,7 @@ import java.util.concurrent.ExecutorService;
 import static com.api.config.AppConfig.PDF_API;
 
 @Tag(description = PDF_API, name = "Download PDF")
+@ApiErrorResponses
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 @Path("/")
 public class PDFController {

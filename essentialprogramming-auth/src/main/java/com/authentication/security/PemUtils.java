@@ -67,8 +67,9 @@ public class PemUtils {
     }
 
     private static byte[] parsePEMFile(String pemFile) throws IOException {
-        FileInputResource fileInputResource = new FileInputResource(pemFile);
-        return fileInputResource.getBytes();
+        try (final FileInputResource fileInputResource = new FileInputResource(pemFile)) {
+            return fileInputResource.getBytes();
+        }
     }
 
     public static PublicKey readPublicKeyFromPEMFile(String pemFile) throws IOException {

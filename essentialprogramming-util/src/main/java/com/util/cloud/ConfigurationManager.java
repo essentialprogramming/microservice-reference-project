@@ -52,7 +52,7 @@ public class ConfigurationManager {
     private static Properties fetchProperties(final InputStream stream) throws IOException {
         final Properties properties = new Properties();
         properties.load(stream);
+
         return properties;
     }
-
 }

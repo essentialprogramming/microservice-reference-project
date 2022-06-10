@@ -9,6 +9,7 @@ import com.api.service.UserService;
 import com.exception.ExceptionHandler;
 import com.internationalization.Messages;
 import com.token.validation.auth.AuthUtils;
+import com.util.annotations.ApiErrorResponses;
 import com.util.async.Computation;
 import com.util.async.ExecutorsProvider;
 import com.util.enums.HTTPCustomStatus;
@@ -41,6 +42,7 @@ import java.util.concurrent.ExecutorService;
 import static com.api.config.AppConfig.USER_API;
 
 @Tag(description = USER_API, name = "User Services")
+@ApiErrorResponses
 @Path("/v1/")
 public class UserController {
 
@@ -62,14 +64,14 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Return user if successfully added",
+            @ApiResponse(responseCode = "201", description = "Successfully return created user details.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserJSON.class)))
     })
     @Anonymous
     public void createUser(@Valid UserInput userInput, @Suspended AsyncResponse asyncResponse) {
 
-        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        final ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> createUser(userInput, language), executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(201).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
@@ -92,7 +94,7 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Load user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return authenticated user if it was successfully found",
+                    @ApiResponse(responseCode = "200", description = "Successfully return authenticated user details.",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserJSON.class)))
             })
@@ -103,7 +105,7 @@ public class UserController {
         final String bearer = AuthUtils.extractBearerToken(authorization);
         final String email = AuthUtils.getClaim(bearer, "email");
 
-        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        final ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> loadUser(email), executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
@@ -120,7 +122,7 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Load all users",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return a list of all users",
+                    @ApiResponse(responseCode = "200", description = "Successfully return list of all users.",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserJSON.class)))
             })
@@ -128,7 +130,8 @@ public class UserController {
     @AllowUserIf("hasAuthority('PERMISSION_do:anything') OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
     @Anonymous
     public void loadAll(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
-        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+
+        final ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(this::findAllUsers, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
@@ -146,13 +149,11 @@ public class UserController {
     @Operation(summary = "Delete User",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Returns a custom JSON with OK status and a message," +
-                            "if the User with a given email has been deleted.",
+                            " if the user with the given email has been successfully deleted.",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(example = "{\"status\": \"ok\", " +
                                             "\"message\": \"User was successfully deleted!\"}"))),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized."),
-                    @ApiResponse(responseCode = "404", description = "User not found!"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+                    @ApiResponse(responseCode = "404", description = "User not found."),
             })
     @AllowUserIf("hasAnyRole(@privilegeService.getPrivilegeRoles(\"LOAD.USER\")) OR hasAnyAuthority('PERMISSION_read:user', 'PERMISSION_edit:user') AND @userService.checkEmailExists(authentication.getPrincipal())")
     public void deleteUser(@HeaderParam("Authorization") String authorization,
