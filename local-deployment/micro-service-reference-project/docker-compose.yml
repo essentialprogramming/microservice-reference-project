@@ -4,10 +4,16 @@ services:
   postgres:
     hostname: postgres
     container_name: postgres
-    image: postgres:12
+    image: postgres:12-alpine
+    restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: micro_service_reference_project
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: essentialprogramming
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local

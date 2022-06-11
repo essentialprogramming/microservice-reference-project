@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 
 import com.undertow.standalone.UndertowServer;
 
+import static com.config.FlywayConfig.migrateDatabase;
 import static com.config.SplashMessage.printSplash;
 import static com.util.cloud.Environment.getProperty;
 import static com.config.Log4JConfig.configureLog4j;
@@ -16,6 +17,7 @@ public class Server {
 
         configureLog4j();
         printSplash();
+        migrateDatabase();
 
         final String  host = getProperty("undertow.host", "0.0.0.0");
         final Integer port = getProperty("undertow.port", 8080);

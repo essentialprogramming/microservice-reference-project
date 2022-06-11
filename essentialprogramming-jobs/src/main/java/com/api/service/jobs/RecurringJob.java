@@ -23,19 +23,27 @@ public class RecurringJob {
 
     private final JobScheduler jobScheduler;
 
-    @Recurring(id = "my-recurring-job", cron = "#{T(com.env.resources.JobResources).RECURRENT_JOB.value()}")
+    @Recurring(id = "recurring-job", cron = "#{T(com.env.resources.JobResources).RECURRENT_JOB.value()}")
     @Job(name = "A recurring job", retries = 5)
-    public void execute() {
+    public void execute(final JobContext jobContext) {
         log.info("Recurring job has started..");
 
+        final JobDashboardProgressBar progressBar = jobContext.progressBar(100);
+        progressBar.setValue(0);
+
         parkThread(12000);
+        progressBar.setValue(30);
+
         log.info("Executing job... Progress {}%", 30);
 
         parkThread(9000);
+        progressBar.setValue(70);
+
         log.info("Executing job... Progress {}%", 70);
 
-
         parkThread(1500);
+        progressBar.setValue(100);
+
         log.info("Almost done... ");
 
         parkThread(300);

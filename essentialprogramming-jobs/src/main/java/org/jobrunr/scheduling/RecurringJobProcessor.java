@@ -3,7 +3,9 @@ package org.jobrunr.scheduling;
 import java.lang.reflect.Method;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.jobrunr.jobs.JobParameter;
 import org.jobrunr.scheduling.annotations.Recurring;
 import org.jobrunr.jobs.JobDetails;
 import org.jobrunr.jobs.context.JobContext;
@@ -81,7 +83,11 @@ public class RecurringJobProcessor {
     }
 
     private JobDetails getJobDetails(Method method) {
-        JobDetails jobDetails = new JobDetails(method.getDeclaringClass().getName(), null, method.getName(), new ArrayList<>());
+        List<JobParameter> jobParameters = new ArrayList<>();
+        if(method.getParameterCount() == 1 && method.getParameterTypes()[0].equals(JobContext.class)) {
+            jobParameters.add(JobParameter.JobContext);
+        }
+        final JobDetails jobDetails = new JobDetails(method.getDeclaringClass().getName(), null, method.getName(), jobParameters);
         jobDetails.setCacheable(true);
         return jobDetails;
     }

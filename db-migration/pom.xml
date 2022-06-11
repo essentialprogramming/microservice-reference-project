@@ -42,7 +42,7 @@
 
                     <locations>
                         <!-- migrate scripts for every environment -->
-                        <location>filesystem:src/main/resources/db</location>
+                        <location>filesystem:src/main/resources/db/migration</location>
 
                     </locations>
                 </configuration>
