@@ -25,7 +25,7 @@ public class FlywayConfig {
                 .baselineVersion(FLYWAY_DEFAULT_VERSION)
                 .baselineDescription("Init")
                 .baselineOnMigrate(false)
-                .locations("filesystem:db-migration/src/main/resources/db/migration")
+                .locations("classpath:db/migration")
                 .load();
 
         val info = flyway.info();

@@ -39,6 +39,7 @@ import io.undertow.servlet.api.DeploymentManager;
 
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
+import org.xnio.XnioWorker;
 
 import static com.util.cloud.Environment.getProperty;
 
@@ -50,7 +51,7 @@ public final class UndertowServer {
     private final int port;
     private final String deploymentName;
 
-    private volatile Undertow server;
+    private static Undertow server;
 
     public UndertowServer(String host, int port, String deploymentName) {
         this.host = host;
@@ -151,5 +152,9 @@ public final class UndertowServer {
     public void stop() {
         server.stop();
         LOCK.unlock();
+    }
+
+    public static XnioWorker getXnioWorker() {
+        return server.getWorker();
     }
 }

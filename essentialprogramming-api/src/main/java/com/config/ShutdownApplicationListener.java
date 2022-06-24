@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShutdownApplicationListener implements ApplicationListener<ContextClosedEvent> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ShutdownApplicationListener.class);
+    private static final Logger log = LoggerFactory.getLogger(ShutdownApplicationListener.class);
 
 
     public ShutdownApplicationListener() {
     }
 
     public void onApplicationEvent(@NonNull ContextClosedEvent event) {
-        LOG.info("Application shutting down..");
+        log.info("Application shutting down..");
     }
 }
