@@ -27,12 +27,13 @@ import static com.util.cloud.Environment.getProperty;
 @Configuration
 public class JobRunrConfig {
 
-    final boolean isBackgroundJobServerEnabled = true; // or get it via ENV variables
-    final boolean isDashboardEnabled = true; // or get it via ENV variables
-    final MeterRegistry meterRegistry = new SimpleMeterRegistry();
-    private static final com.util.cloud.Configuration configuration = ConfigurationManager.getConfiguration();
-    private final String dashboardUser = getProperty("JOBRUNR_DASHBOARD_USER", configuration.getPropertyAsString("jobrunr.dashboard.user"));
-    private final String encryptedDashboardPassword = getProperty("JOBRUNR_DASHBOARD_PASSWORD", configuration.getPropertyAsString("jobrunr.dashboard.password"));
+    private static final boolean isBackgroundJobServerEnabled = true; // or get it via ENV variables
+    private static final boolean isDashboardEnabled = true; // or get it via ENV variables
+
+    private static final MeterRegistry meterRegistry = new SimpleMeterRegistry();
+    private static final com.util.cloud.Configuration configuration =
+            ConfigurationManager.getConfiguration();
+
 
     @Bean
     public JobRunrConfiguration.JobRunrConfigurationResult initJobRunner(final JobActivator jobActivator) {
@@ -67,16 +68,25 @@ public class JobRunrConfig {
 
     @Bean
     public JobRunrDashboardWebServerConfiguration initJobRunrDashboard()  {
-        String decryptedPassword = decrypt(encryptedDashboardPassword);
+        final String dashboardUser = getProperty(
+                "JOBRUNR_DASHBOARD_USER",
+                configuration.getPropertyAsString("jobrunr.dashboard.user")
+        );
 
-        return JobRunrDashboardWebServerConfiguration
-                .usingStandardDashboardConfiguration()
+        final String encryptedDashboardPassword = getProperty(
+                "JOBRUNR_DASHBOARD_PASSWORD",
+                configuration.getPropertyAsString("jobrunr.dashboard.password")
+        );
+
+        final String decryptedPassword = decrypt(encryptedDashboardPassword);
+        
+        return JobRunrDashboardWebServerConfiguration.usingStandardDashboardConfiguration()
                 .andPort(1000)
                 .andBasicAuthentication(dashboardUser, decryptedPassword);
     }
 
 
-    private String decrypt(final String value) {
+    private static String decrypt(final String value) {
         try {
             return Crypt.decrypt(value, "supercalifragilisticexpialidocious");
         } catch (GeneralSecurityException e) {
