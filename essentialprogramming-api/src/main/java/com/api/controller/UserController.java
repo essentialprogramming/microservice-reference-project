@@ -9,6 +9,7 @@ import com.api.service.UserService;
 import com.exception.ExceptionHandler;
 import com.internationalization.Messages;
 import com.token.validation.auth.AuthUtils;
+import com.undertow.standalone.UndertowServer;
 import com.util.annotations.ApiErrorResponses;
 import com.util.async.Computation;
 import com.util.async.ExecutorsProvider;
@@ -22,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -44,6 +46,7 @@ import static com.api.config.AppConfig.USER_API;
 @Tag(description = USER_API, name = "User Services")
 @ApiErrorResponses
 @Path("/v1/")
+@Slf4j
 public class UserController {
 
     private final UserService userService;

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import java.util.concurrent.ExecutorService;
 
 @Tag(description = "Authorization API", name = "Authorization")
 @Path("/")
+@Slf4j
 public class AuthenticationController {
 
     @Context
@@ -66,6 +68,7 @@ public class AuthenticationController {
                                     schema = @Schema(implementation = JsonResponse.class))),
             })
     public void authenticate(AuthRequest tokenRequest, @Suspended AsyncResponse asyncResponse) {
+        log.info("Received authentication request for email {}", tokenRequest.getEmail());
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
         Computation.computeAsync(() -> authenticate(tokenRequest), executorService)

@@ -31,14 +31,14 @@ public class JobController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("enqueue")
-    @Operation(summary = "Enqueue job", description = "Enqueue a given story action job",
+    @Operation(summary = "Enqueue job", description = "Enqueue a given job",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Returns 200 if job was enequeued successfully")
+                    @ApiResponse(responseCode = "200", description = "Returns 200 if job was enqueued successfully")
             }
     )
     public void enqueueJob(@Suspended AsyncResponse asyncResponse) {
 
-        ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        ExecutorService executorService = ExecutorsProvider.getManagedExecutorService();
         Computation.computeAsync(jobService::enqueueProgressJob, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
@@ -48,7 +48,7 @@ public class JobController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("schedule")
-    @Operation(summary = "Schedule job", description = "Schedule a given story action job at a given time",
+    @Operation(summary = "Schedule job", description = "Schedule a given job at a given time",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Returns 200 if job was scheduled successfully")
             }
@@ -56,7 +56,7 @@ public class JobController {
     public void scheduleJob(@Suspended AsyncResponse asyncResponse, @QueryParam("time") @Schema(example = "16/05/2022 16:00:00") String dateTime) {
 
         ExecutorService executorService = ExecutorsProvider.getExecutorService();
-        Computation.computeAsync(()-> jobService.scheduleDemoJob(dateTime), executorService)
+        Computation.computeAsync(() -> jobService.scheduleDemoJob(dateTime), executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
     }
@@ -87,8 +87,11 @@ public class JobController {
     )
     public void start(@Suspended AsyncResponse asyncResponse) {
 
-        JobRunr.getBackgroundJobServer().stop();
-        JobRunr.getBackgroundJobServer().start();
+        if (JobRunr.getBackgroundJobServer() != null
+                && !JobRunr.getBackgroundJobServer().isRunning()
+        ) {
+            JobRunr.getBackgroundJobServer().start();
+        }
 
         asyncResponse.resume(Response.status(200).build());
 
