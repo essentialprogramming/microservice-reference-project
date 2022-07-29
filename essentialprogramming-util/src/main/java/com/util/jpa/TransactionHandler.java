@@ -14,8 +14,19 @@ public class TransactionHandler {
         return supplier.get();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void runInTransaction(Runnable runnable) {
+        runnable.run();
+    }
+
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public <T> T runInNewTransaction(Supplier<T> supplier) {
         return supplier.get();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void runInNewTransaction(Runnable runnable) {
+        runnable.run();
     }
 }
