@@ -4,6 +4,7 @@ import com.api.enums.CronEnum;
 import com.api.service.JobService;
 import com.exception.ExceptionHandler;
 import com.util.async.Computation;
+import com.util.async.ExecutionPriority;
 import com.util.async.ExecutorsProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,8 +39,14 @@ public class JobController {
     )
     public void enqueueJob(@Suspended AsyncResponse asyncResponse) {
 
-        ExecutorService executorService = ExecutorsProvider.getManagedExecutorService();
-        Computation.computeAsync(jobService::enqueueProgressJob, executorService)
+        final ExecutorService executorService = ExecutorsProvider.getExecutorService();
+        final ExecutorService managedExecutorService = ExecutorsProvider.getManagedExecutorService();
+
+        Computation.computeAsync(
+                        jobService::enqueueProgressJob,
+                        managedExecutorService,
+                        ExecutionPriority.MEDIUM
+                )
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
     }

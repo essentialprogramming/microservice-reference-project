@@ -15,13 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ManagedThreadPoolExecutor extends ThreadPoolExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(ManagedThreadPoolExecutor.class);
-    private static final AtomicInteger seq = new AtomicInteger(1);
 
     public ManagedThreadPoolExecutor(
             final int corePoolSize,
             final int maximumPoolSize,
             final long keepAliveTime,
             final TimeUnit unit,
+            final String threadPoolName,
             final BlockingQueue<Runnable> workQueue,
             final RejectedExecutionHandler handler) {
 
@@ -31,45 +31,49 @@ public class ManagedThreadPoolExecutor extends ThreadPoolExecutor {
                 keepAliveTime,
                 unit,
                 workQueue,
-                new NamedThreadFactory("micro-service-reference-project-thread-pool"),
+                new NamedThreadFactory(threadPoolName),
                 handler
         );
     }
 
     public void stop() {
-        shutdown();
-        log.info("ManagedExecutorService - stopping (waiting for all tasks to complete - max 60 seconds)");
+        shutdown(); // Disable new tasks from being submitted
+        log.info("ManagedExecutorService - stopping (waiting for all tasks to complete - max 180 seconds)");
         try {
-            if (!awaitTermination(60, TimeUnit.SECONDS)) {
-                shutdownNow();
+            // Wait a while for existing tasks to terminate
+            if (!awaitTermination(180, TimeUnit.SECONDS)) {
+                shutdownNow();// Cancel currently executing tasks
+                // Wait a while for tasks to respond to being cancelled
+                if (!awaitTermination(180, TimeUnit.SECONDS))
+                    log.error("Pool did not terminate");
             }
             log.info("ManagedExecutorService stopped");
         } catch (InterruptedException e) {
+            // (Re-)Cancel if current thread also interrupted
             shutdownNow();
+            // Preserve interrupt status
             Thread.currentThread().interrupt();
         }
     }
 
 
     private static class NamedThreadFactory implements ThreadFactory {
-
-        private final String poolName;
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private static final AtomicInteger threadCount = new AtomicInteger(1);
+        private final String namePrefix;
         private final ThreadFactory threadFactory;
 
         public NamedThreadFactory(final String poolName) {
-            this.poolName = poolName;
-            threadFactory = Executors.defaultThreadFactory();
+            this.namePrefix = poolName + poolNumber.getAndIncrement() + "-thread-";
+            this.threadFactory = Executors.defaultThreadFactory();
         }
 
         @Override
         public Thread newThread(@NonNull Runnable runnable) {
             final Thread thread = threadFactory.newThread(runnable);
-            final String workerName = "APP-" + seq.getAndIncrement();
-            thread.setName(thread.getName()
-                    .replace("pool", poolName)
-                    .replace("-thread-", "-worker")
-            );
+            final String workerName = this.namePrefix + threadCount.getAndIncrement();
 
+            thread.setName(workerName);
             return thread;
         }
     }

@@ -40,12 +40,13 @@ public class ExecutorsProvider {
         int maxPoolSize = corePoolSize * 2;
 
         final RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
-        //final BlockingQueue<Runnable> queue = new PriorityBlockingQueue<>(SUBMITTED_TASKS_QUEUE_SIZE);
-        final BlockingQueue<Runnable> queue = new LinkedBlockingDeque<>(SUBMITTED_TASKS_QUEUE_SIZE);
+        final BlockingQueue<Runnable> queue = new PriorityBlockingQueue<>(SUBMITTED_TASKS_QUEUE_SIZE);
+        //final BlockingQueue<Runnable> queue = new LinkedBlockingDeque<>(SUBMITTED_TASKS_QUEUE_SIZE);
 
         final ManagedThreadPoolExecutor executor = new ManagedThreadPoolExecutor(
                 corePoolSize, maxPoolSize,
                 0L, TimeUnit.MILLISECONDS,
+                "prio",
                 queue,
                 handler
         );

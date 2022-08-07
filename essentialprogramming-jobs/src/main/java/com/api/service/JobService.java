@@ -28,6 +28,7 @@ public class JobService {
         final JobId jobId = jobRunner.enqueueJob(() ->
                 progressJob.execute(progressJob.getName(), 100000000, JobContext.Null)
         );
+
         return new JsonResponse()
                 .with("Status", "ok")
                 .with("JobId", jobId.toString())
