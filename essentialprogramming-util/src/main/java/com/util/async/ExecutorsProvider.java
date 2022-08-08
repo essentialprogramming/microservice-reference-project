@@ -22,7 +22,7 @@ public class ExecutorsProvider {
 
     private static class ExecutorsServiceHolder {
         static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
-        static final ManagedThreadPoolExecutor managedExecutorService = getManagedAsyncExecutor();
+        static final ManagedThreadPoolExecutor managedExecutorService = getManagedAsyncExecutor(false);
     }
 
 
@@ -35,9 +35,13 @@ public class ExecutorsProvider {
     }
 
 
-    private static ManagedThreadPoolExecutor getManagedAsyncExecutor() {
-        int corePoolSize = Runtime.getRuntime().availableProcessors();
-        int maxPoolSize = corePoolSize * 2;
+    protected static ManagedThreadPoolExecutor getManagedAsyncExecutor(boolean singleThreaded) {
+        int corePoolSize = singleThreaded
+                ? 1
+                : Runtime.getRuntime().availableProcessors();
+        int maxPoolSize = singleThreaded
+                ? 1
+                : corePoolSize * 2;
 
         final RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
         final BlockingQueue<Runnable> queue = new PriorityBlockingQueue<>(SUBMITTED_TASKS_QUEUE_SIZE);
