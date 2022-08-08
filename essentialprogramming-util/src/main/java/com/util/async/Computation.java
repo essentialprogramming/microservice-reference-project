@@ -74,7 +74,7 @@ public final class Computation {
             }
 
             public int compareTo(Task task) {
-                return ExecutionPriority.COMPARATOR.compare(getPriority(), task.getPriority());
+                return getPriority().compareTo(task.getPriority());
             }
 
             private Execution<R> tryExecute(Callable<R> callable) {
