@@ -168,4 +168,12 @@ public final class Computation {
         }
     }
 
+    public static <R> CompletableFuture<R> computeAsyncWithPriority(Callable<R> callable, ExecutionPriority priority, ExecutorService executorService) {
+
+        ComparableCompletableFuture<R> futureTask = new ComparableCompletableFuture<>();
+        Task<R> task = new Task<>(callable, priority, futureTask);
+
+        executorService.execute(task);
+        return futureTask;
+    }
 }
