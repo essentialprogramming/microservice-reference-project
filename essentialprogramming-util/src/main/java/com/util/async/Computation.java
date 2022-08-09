@@ -48,56 +48,9 @@ public final class Computation {
             final ExecutionPriority priority) {
 
         final CompletableFuture<R> promise = new CompletableFuture<>();
+        final Task<R> task = new Task<>(callable, promise, priority );
 
-        final class Task implements Runnable, Comparable<Task>, CompletableFuture.AsynchronousCompletionTask {
-            final ExecutionPriority priority;
-            final Callable<R> callable;
-
-            public Task(Callable<R> callable, ExecutionPriority priority) {
-                this.callable = callable;
-                this.priority = priority;
-
-            }
-
-            public void run() {
-                final Execution<R> execution = tryExecute(callable);
-                if (!execution.wasSuccessful()) {
-                    promise.completeExceptionally(execution.getFailure());
-                    return;
-                }
-
-                if (!promise.isDone()) promise.complete(execution.getResult());
-            }
-
-            private ExecutionPriority getPriority() {
-                return priority;
-            }
-
-            public int compareTo(Task task) {
-                return getPriority().compareTo(task.getPriority());
-            }
-
-            private Execution<R> tryExecute(Callable<R> callable) {
-                final Execution<R> execution = Execution.create();
-                try {
-                    R callResult = callable.call();
-
-                    execution.setSuccessful(true);
-                    execution.setResult(callResult);
-                } catch (Throwable e) {
-                    LOG.error(e.getMessage(), e);
-
-                    execution.setSuccessful(false);
-                    execution.setFailure(e);
-
-                }
-
-                return execution;
-            }
-        }
-        final Task job = new Task(callable, priority);
-        executorService.execute(job);
-
+        executorService.execute(task);
         return promise;
     }
 
@@ -168,12 +121,4 @@ public final class Computation {
         }
     }
 
-    public static <R> CompletableFuture<R> computeAsyncWithPriority(Callable<R> callable, ExecutionPriority priority, ExecutorService executorService) {
-
-        ComparableCompletableFuture<R> futureTask = new ComparableCompletableFuture<>();
-        Task<R> task = new Task<>(callable, priority, futureTask);
-
-        executorService.execute(task);
-        return futureTask;
-    }
 }

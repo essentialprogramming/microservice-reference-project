@@ -63,7 +63,7 @@ public class JobController {
     public void enqueueJobWithPriority(@Suspended AsyncResponse asyncResponse, @PathParam("priority") ExecutionPriority priority) {
 
         ExecutorService executorService = ExecutorsProvider.getManagedExecutorService();
-        Computation.computeAsyncWithPriority(jobService::enqueueProgressJob, priority, executorService)
+        Computation.computeAsync(jobService::enqueueProgressJob, executorService, priority)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()))
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
     }
