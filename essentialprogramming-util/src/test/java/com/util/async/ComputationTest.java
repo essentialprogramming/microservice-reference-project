@@ -7,35 +7,47 @@ import org.junit.jupiter.api.Test;
 
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ComputationTest {
 
     private final Random random = new Random();
-
+    private static final int numberOfTests = 30;
     @Test
     @SneakyThrows
     void shouldExecuteTasksBasedOnPriority() {
         //given
-        ExecutorService executorService = ExecutorsProvider.getManagedAsyncExecutor(true);
+        final List<PriorityTask> taskList = new ArrayList<>();
+
+        final ExecutorService executorService = ExecutorsProvider.getManagedAsyncExecutor(true);
+        final CountDownLatch latch = new CountDownLatch(numberOfTests);
+
+        BiConsumer<PriorityTask, Throwable> consumer = (priorityTask, error) -> {
+            if (error != null) {
+               //
+            } else {
+                taskList.add(priorityTask);
+            }
+            latch.countDown();
+        };
 
         //dummy to keep thread occupied
         Computation.computeAsync(new PriorityTask(ExecutionPriority.HIGHER), executorService, ExecutionPriority.HIGHER);
 
-        List<PriorityTask> taskList = new ArrayList<>();
-        int numberOfTests = 30;
 
         //when
         IntStream.range(0, numberOfTests).forEach(number -> {
             ExecutionPriority priority = getRandomPriority();
             Computation.computeAsync(new PriorityTask(priority), executorService, priority)
-                    .whenComplete((priorityTask, throwable) -> taskList.add(priorityTask));
+                    .whenComplete(consumer);
         });
 
         //then
-        Thread.sleep(numberOfTests * 1150);
+        latch.await();
 
         List<PriorityTask> sortedByPriority = taskList.stream().sorted(Comparator.comparing(PriorityTask::getExecutionPriority)).collect(Collectors.toList());
         Assertions.assertThat(taskList.equals(sortedByPriority)).isTrue();
