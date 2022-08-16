@@ -1,6 +1,5 @@
-package com.util.task;
+package com.util.async;
 
-import com.util.async.ExecutionPriority;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
