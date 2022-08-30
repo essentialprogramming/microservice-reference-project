@@ -5,8 +5,9 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.filter.ThresholdFilter;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class ErrorMetricsAppender extends AbstractAppender {
 
     private final ErrorMetrics errorMetrics;

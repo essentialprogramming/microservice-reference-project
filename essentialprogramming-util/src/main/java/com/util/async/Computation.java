@@ -28,7 +28,7 @@ public final class Computation {
             try {
                 return callable.call();
             } catch (Exception ex) {
-                LOG.error(ex.getMessage(), ex);
+                LOG.warn("Exception occurred in callable: {}", ex.getMessage(), ex);
                 throw new CompletionException(ex);
             }
         }, executorService);
@@ -65,7 +65,7 @@ public final class Computation {
             try {
                 callable.run();
             } catch (Exception ex) {
-                LOG.error(ex.getMessage(), ex);
+                LOG.warn("Exception occurred in callable: {}", ex.getMessage(), ex);
                 throw new CompletionException(ex);
             }
         }, executorService);

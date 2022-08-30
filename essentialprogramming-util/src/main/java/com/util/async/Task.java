@@ -35,7 +35,7 @@ final class Task<R> implements Runnable, Comparable<Task<R>>, CompletableFuture.
             execution.setSuccessful(true);
             execution.setResult(callResult);
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
+            log.warn("Exception occurred in callable: {}", e.getMessage(), e);
 
             execution.setSuccessful(false);
             execution.setFailure(e);

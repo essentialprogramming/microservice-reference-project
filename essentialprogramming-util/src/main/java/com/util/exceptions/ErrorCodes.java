@@ -21,7 +21,7 @@ public class ErrorCodes {
 
     }
 
-    private static final Map<String, ErrorCode> messages = new HashMap<>();
+    private static final Map<String, ErrorCode> errors = new HashMap<>();
 
 
     /**
@@ -32,14 +32,14 @@ public class ErrorCodes {
     }
 
     public static <E extends Enum<E>> void registerErrorCodes(Class<E> clazz) {
-        EnumSet.allOf(clazz).forEach(error -> messages.put(((ErrorCode) error).getCode(), (ErrorCode) error));
+        EnumSet.allOf(clazz).forEach(error -> errors.put(((ErrorCode) error).getCode(), (ErrorCode) error));
     }
 
     public static String getMessage(String key) {
-        return messages.get(key).getDescription();
+        return errors.get(key).getDescription();
     }
 
-    public static Map<String, ErrorCode> getMessages() {
-        return messages;
+    public static Map<String, ErrorCode> getErrors() {
+        return errors;
     }
 }

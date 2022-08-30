@@ -2,6 +2,7 @@ package com.api.service;
 
 import com.api.entities.User;
 import com.api.env.resources.AppResources;
+import com.api.exceptions.codes.ErrorCode;
 import com.api.mapper.UserMapper;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
@@ -20,6 +21,7 @@ import com.util.io.FileInputResource;
 import com.util.web.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.ThreadContext;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,11 +67,17 @@ public class UserService {
         final User user = UserMapper.inputToUser(input);
         final User result = saveUser(user, input, language);
 
-        LocalDateTime createdDate = LocalDateTime.now(clock);
+        final LocalDateTime createdDate = LocalDateTime.now(clock);
         user.setCreatedDate(createdDate);
 
-        String validationKey = Crypt.encrypt(NanoIdUtils.randomNanoId(), AppResources.ENCRYPTION_KEY.value());
-        String encryptedUserKey = Crypt.encrypt(result.getUserKey(), AppResources.ENCRYPTION_KEY.value());
+        final String validationKey = Crypt.encrypt(
+                NanoIdUtils.randomNanoId(),
+                AppResources.ENCRYPTION_KEY.value()
+        );
+        final String encryptedUserKey = Crypt.encrypt(
+                result.getUserKey(),
+                AppResources.ENCRYPTION_KEY.value()
+        );
 
         String url = AppResources.ACCOUNT_CONFIRMATION_URL.value() + "/" + validationKey + "/" + encryptedUserKey;
 
@@ -134,7 +142,7 @@ public class UserService {
 
     private User saveUser(User user, UserInput input, com.util.enums.Language language) {
 
-        String uuid = NanoIdUtils.randomNanoId();
+        final String uuid = NanoIdUtils.randomNanoId();
         user.setUserKey(uuid);
 
         userRepository.save(user);

@@ -2,6 +2,7 @@ package com.api.controller;
 
 import com.api.config.Anonymous;
 import com.api.entities.User;
+import com.api.exceptions.codes.ErrorCode;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
@@ -9,7 +10,6 @@ import com.api.service.UserService;
 import com.exception.ExceptionHandler;
 import com.internationalization.Messages;
 import com.token.validation.auth.AuthUtils;
-import com.undertow.standalone.UndertowServer;
 import com.util.annotations.ApiErrorResponses;
 import com.util.async.Computation;
 import com.util.async.ExecutorsProvider;
@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.ThreadContext;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -84,6 +85,11 @@ public class UserController {
     private Serializable createUser(UserInput userInput, Language language) throws GeneralSecurityException, ApiException {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
         if (!isValid) {
+
+            ThreadContext.put("errorID", ErrorCode.USER_ALREADY_EXISTS.getCode());
+            log.error(ErrorCode.USER_ALREADY_EXISTS.getDescription());
+            ThreadContext.clearMap();
+
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
         }
         return userService.save(userInput, language);
