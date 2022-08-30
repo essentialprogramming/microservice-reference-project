@@ -26,15 +26,15 @@ public enum ErrorCode implements ErrorCodes.ErrorCode {
     UNABLE_TO_AUTHENTICATE("60", "Authentication failed");
 
 
-
-
-    static {
-        ErrorCodes.registerErrorCodes(ErrorCode.class);
-    }
-
     private final String code;
     private final String description;
 
+    /**
+     * The standard constructor.
+     *
+     * @param code        the error code
+     * @param description the error description
+     */
     ErrorCode(String code, String description) {
         this.code = code;
         this.description = description;

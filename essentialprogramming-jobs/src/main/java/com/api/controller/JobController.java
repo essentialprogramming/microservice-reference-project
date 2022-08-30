@@ -54,6 +54,23 @@ public class JobController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("enqueue/{priority}")
+    @Operation(summary = "Enqueue job with execution priority", description = "Enqueue job with execution priority",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Returns 200 if job was enqueued successfully")
+            }
+    )
+    public void enqueueJobWithPriority(@Suspended AsyncResponse asyncResponse, @PathParam("priority") ExecutionPriority priority) {
+
+        ExecutorService executorService = ExecutorsProvider.getManagedExecutorService();
+        Computation.computeAsync(jobService::enqueueProgressJob, executorService, priority)
+                .thenApplyAsync(json -> asyncResponse.resume(Response.status(200).entity(json).build()))
+                .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
+    }
+
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("schedule")
     @Operation(summary = "Schedule job", description = "Schedule a given job at a given time",
             responses = {

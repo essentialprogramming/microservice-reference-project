@@ -50,7 +50,7 @@
 
 
         <!-- pattern layout actually uses location, so we need to include it -->
-        <AsyncLogger name="com.api" level="DEBUG" includeLocation="true">
+        <AsyncLogger name="com.api" level="DEBUG" includeLocation="true" additivity="true">
         </AsyncLogger>
 
         <AsyncRoot level="${logLevel}">
