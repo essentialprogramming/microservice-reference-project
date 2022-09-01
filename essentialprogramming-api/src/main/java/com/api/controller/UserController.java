@@ -2,7 +2,6 @@ package com.api.controller;
 
 import com.api.config.Anonymous;
 import com.api.entities.User;
-import com.api.exceptions.codes.ErrorCode;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
@@ -23,7 +22,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.CustomLog;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.MarkerManager;
+import org.slf4j.MarkerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -42,11 +43,13 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 
 import static com.api.config.AppConfig.USER_API;
+import static com.api.exceptions.codes.ErrorCode.USER_ALREADY_EXISTS;
+import static org.slf4j.MarkerFactory.getMarker;
 
 @Tag(description = USER_API, name = "User Services")
 @ApiErrorResponses
 @Path("/v1/")
-@CustomLog
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -84,7 +87,7 @@ public class UserController {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
         if (!isValid) {
 
-            log.error(ErrorCode.USER_ALREADY_EXISTS);
+            log.error(getMarker(USER_ALREADY_EXISTS.getCode()), USER_ALREADY_EXISTS.getDescription());
 
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
         }

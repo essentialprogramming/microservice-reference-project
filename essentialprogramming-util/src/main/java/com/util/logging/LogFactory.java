@@ -1,11 +1,13 @@
 package com.util.logging;
 
-import com.util.logging.wrapper.Log;
 import com.util.logging.wrapper.MetricLogger;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
 
-public class LogFactory {
+public class LogFactory implements ILoggerFactory {
 
-    public static Log getLogger(final Class<?> clazz) {
-        return new MetricLogger(clazz);
+    @Override
+    public Logger getLogger(String s) {
+        return new MetricLogger(s);
     }
 }
