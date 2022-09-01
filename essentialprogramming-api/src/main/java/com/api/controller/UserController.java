@@ -23,8 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.ThreadContext;
+import lombok.CustomLog;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -47,11 +46,10 @@ import static com.api.config.AppConfig.USER_API;
 @Tag(description = USER_API, name = "User Services")
 @ApiErrorResponses
 @Path("/v1/")
-@Slf4j
+@CustomLog
 public class UserController {
 
     private final UserService userService;
-
 
     @Context
     private Language language;
@@ -86,9 +84,7 @@ public class UserController {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
         if (!isValid) {
 
-            ThreadContext.put("errorID", ErrorCode.USER_ALREADY_EXISTS.getCode());
-            log.error(ErrorCode.USER_ALREADY_EXISTS.getDescription());
-            ThreadContext.clearMap();
+            log.error(ErrorCode.USER_ALREADY_EXISTS);
 
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
         }
