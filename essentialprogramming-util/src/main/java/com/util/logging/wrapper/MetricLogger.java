@@ -1,9 +1,9 @@
 package com.util.logging.wrapper;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.slf4j.Marker;
 
 import static com.util.logging.LoggingKey.*;
@@ -11,14 +11,16 @@ import static com.util.logging.LoggingKey.*;
 public class MetricLogger implements org.slf4j.Logger {
 
     private final Logger log;
+    private final String name;
 
-    public MetricLogger(final String name) {
-        log = LogManager.getLogger(name);
+    public MetricLogger(final ExtendedLogger logger, final String name) {
+        this.log = logger;
+        this.name = name;
     }
 
     @Override
     public String getName() {
-        return log.getName();
+        return name;
     }
 
     @Override
