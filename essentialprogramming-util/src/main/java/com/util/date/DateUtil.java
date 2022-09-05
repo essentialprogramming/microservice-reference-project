@@ -1,15 +1,12 @@
 package com.util.date;
 
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -95,33 +92,36 @@ public class DateUtil {
 
     }
 
+
     public static OffsetDateTime startOfDay(final LocalDate date) {
-        return date.atTime(OffsetTime.MIN);
-    }
-
-    public static OffsetDateTime startOfDay1(final LocalDate date) {
-        final Instant startDate = Instant.parse(date.toString()+"T00:00:00Z");
-        return startDate.atOffset(ZoneOffset.UTC);
+        return date
+                .atStartOfDay(ZoneOffset.UTC)
+                .withEarlierOffsetAtOverlap()
+                .toOffsetDateTime();
 
     }
 
-    public static OffsetDateTime startOfDay2(final LocalDate date) {
-        return date.atStartOfDay(ZoneOffset.UTC).withEarlierOffsetAtOverlap().toOffsetDateTime();
-
+    public static OffsetDateTime startOfNextDay(final LocalDate date) {
+        //return date.plusDays(1).atTime(OffsetTime.MIN);
+        return date
+                .plusDays(1)
+                .atStartOfDay(ZoneOffset.UTC)
+                .withEarlierOffsetAtOverlap()
+                .toOffsetDateTime();
     }
+
 
     public static OffsetDateTime endOfDay(final LocalDate date) {
-        return date.plusDays(1).atTime(OffsetTime.MIN);
-    }
-
-    public static OffsetDateTime endOfDay1(final LocalDate date) {
-        final Instant endDate = Instant.parse(date.toString()+"T23:59:59Z");
-        return endDate.atOffset(ZoneOffset.UTC);
-
-    }
-
-    public static OffsetDateTime endOfDay2(final LocalDate date) {
         return date.atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toOffsetDateTime();
+    }
 
+    public static LocalDateTime toLocalDateTime(final OffsetDateTime offsetDateTime){
+        return LocalDateTime.ofInstant(offsetDateTime.toInstant(), ZoneOffset.UTC);
+    }
+
+    public static LocalDate toLocalDate(final OffsetDateTime offsetDateTime){
+        return LocalDateTime
+                .ofInstant(offsetDateTime.toInstant(), ZoneOffset.UTC)
+                .toLocalDate();
     }
 }
