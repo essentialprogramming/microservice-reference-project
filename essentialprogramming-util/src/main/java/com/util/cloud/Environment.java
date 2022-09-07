@@ -30,6 +30,16 @@ public interface Environment {
             public Integer getValue(String value) {
                 return value != null ? Integer.valueOf(value) : null;
             }
+        },
+        LONG {
+            public Long getValue(String value) {
+                return value != null ? Long.valueOf(value) : null;
+            }
+        },
+        BOOLEAN {
+            public Boolean getValue(String value) {
+                return value != null ? Boolean.valueOf(value) : null;
+            }
         };
 
         public abstract Object getValue(String key);
