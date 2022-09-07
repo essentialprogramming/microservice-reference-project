@@ -3,6 +3,7 @@ package com.logging;
 import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.spi.MDCAdapter;
 
+import java.util.Deque;
 import java.util.Map;
 
 public class Log4jMDCAdapter implements MDCAdapter {
@@ -28,6 +29,26 @@ public class Log4jMDCAdapter implements MDCAdapter {
 
     public Map<String, String> getCopyOfContextMap() {
         return ThreadContext.getContext();
+    }
+
+    @Override
+    public void pushByKey(String s, String s1) {
+        ThreadContext.push(s, s1);
+    }
+
+    @Override
+    public String popByKey(String s) {
+        return ThreadContext.pop();
+    }
+
+    @Override
+    public Deque<String> getCopyOfDequeByKey(String s) {
+        return null;
+    }
+
+    @Override
+    public void clearDequeByKey(String s) {
+
     }
 
     @SuppressWarnings("unchecked")

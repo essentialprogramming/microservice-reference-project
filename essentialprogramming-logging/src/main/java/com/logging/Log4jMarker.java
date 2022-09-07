@@ -3,7 +3,6 @@ package com.logging;
 import org.apache.logging.log4j.MarkerManager;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.Marker;
-import org.slf4j.impl.StaticMarkerBinder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +16,7 @@ public class Log4jMarker implements Marker {
     private final org.apache.logging.log4j.Marker marker;
 
     public Log4jMarker(final org.apache.logging.log4j.Marker marker) {
-        this.factory = StaticMarkerBinder.SINGLETON.getMarkerFactory();
+        this.factory = SLF4JServiceProviderImpl.getSingleton().getMarkerFactory();
         this.marker = marker;
     }
 

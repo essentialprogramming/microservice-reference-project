@@ -3,7 +3,6 @@ package com.logging;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.slf4j.Marker;
-import org.slf4j.impl.StaticMarkerBinder;
 
 import static com.logging.LoggingKey.*;
 import static org.apache.logging.log4j.Level.*;
@@ -276,7 +275,7 @@ public class Log4jLogger implements org.slf4j.Logger {
         } else if (marker instanceof Log4jMarker) {
             return ((Log4jMarker)marker).getLog4jMarker();
         } else {
-            Log4jMarkerFactory factory = (Log4jMarkerFactory) StaticMarkerBinder.SINGLETON.getMarkerFactory();
+            Log4jMarkerFactory factory = (Log4jMarkerFactory) SLF4JServiceProviderImpl.getSingleton().getMarkerFactory();
             return ((Log4jMarker)factory.getMarker(marker)).getLog4jMarker();
         }
     }
