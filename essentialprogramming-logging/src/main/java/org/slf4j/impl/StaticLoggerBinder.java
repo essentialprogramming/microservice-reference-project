@@ -1,6 +1,6 @@
 package org.slf4j.impl;
 
-import com.util.logging.LogFactory;
+import com.logging.Log4jFactory;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
@@ -9,7 +9,7 @@ import org.slf4j.spi.LoggerFactoryBinder;
  */
 public class StaticLoggerBinder implements LoggerFactoryBinder {
 
-    private static final String LOGGER_FACTORY_CLASS = LogFactory.class.getName();
+    private static final String LOGGER_FACTORY_CLASS = Log4jFactory.class.getName();
     private static class LoggerBinderHolder {
         private static final StaticLoggerBinder SLF4J_STATIC_LOGGER_BINDER = new StaticLoggerBinder();
     }
@@ -25,7 +25,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
     private final ILoggerFactory loggerFactory;
 
     private StaticLoggerBinder() {
-        loggerFactory = new LogFactory();
+        loggerFactory = new Log4jFactory();
     }
 
     @Override

@@ -15,6 +15,7 @@
 		<module>token-validation</module>
         <module>essentialprogramming-email</module>
 		<module>essentialprogramming-jobs</module>
+		<module>essentialprogramming-logging</module>
         <module>db-migration</module>
     </modules>
 

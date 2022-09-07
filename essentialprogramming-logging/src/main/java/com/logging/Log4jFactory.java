@@ -1,6 +1,5 @@
-package com.util.logging;
+package com.logging;
 
-import com.util.logging.wrapper.MetricLogger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.spi.AbstractLoggerAdapter;
 import org.apache.logging.log4j.spi.LoggerContext;
@@ -11,17 +10,17 @@ import org.slf4j.Logger;
 import java.util.function.Predicate;
 
 
-public class LogFactory extends AbstractLoggerAdapter<Logger>  implements ILoggerFactory {
+public class Log4jFactory extends AbstractLoggerAdapter<Logger>  implements ILoggerFactory {
 
     private static final Predicate<Class<?>> CALLER_PREDICATE = (clazz) -> !AbstractLoggerAdapter.class.equals(clazz) && !clazz.getName().startsWith("org.slf4j");
 
     protected Logger newLogger(final String name, final LoggerContext context) {
         final String key = "ROOT".equals(name) ? "" : name;
-        return new MetricLogger(context.getLogger(key), name);
+        return new Log4jLogger(context.getLogger(key), name);
     }
 
     protected LoggerContext getContext() {
-        final Class<?> anchor = LogManager.getFactory().isClassLoaderDependent() ? StackLocatorUtil.getCallerClass(LogFactory.class, CALLER_PREDICATE) : null;
+        final Class<?> anchor = LogManager.getFactory().isClassLoaderDependent() ? StackLocatorUtil.getCallerClass(Log4jFactory.class, CALLER_PREDICATE) : null;
         return anchor == null ? LogManager.getContext(false) : this.getContext(anchor);
     }
 

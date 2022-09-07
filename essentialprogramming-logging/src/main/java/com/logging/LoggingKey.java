@@ -1,4 +1,4 @@
-package com.util.logging;
+package com.logging;
 
 import lombok.Getter;
 
