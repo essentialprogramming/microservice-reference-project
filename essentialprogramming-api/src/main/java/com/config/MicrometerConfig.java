@@ -38,6 +38,8 @@ public class MicrometerConfig {
     }
 
     private DatadogConfig configureDatadog() {
+        final String apiKey = decryptKey(AppResources.DATADOG_API_KEY);
+        final String applicationKey = decryptKey(AppResources.DATADOG_APPLICATION_KEY);
 
         return new DatadogConfig() {
             @Override
@@ -47,12 +49,12 @@ public class MicrometerConfig {
 
             @Override
             public String apiKey() {
-                return decryptKey(AppResources.DATADOG_API_KEY);
+                return apiKey;
             }
 
             @Override
             public String applicationKey() {
-                return decryptKey(AppResources.DATADOG_APPLICATION_KEY);
+                return applicationKey;
             }
 
             @Override
