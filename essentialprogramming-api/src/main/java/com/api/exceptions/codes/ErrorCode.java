@@ -11,7 +11,9 @@ public enum ErrorCode implements ErrorCodes.ErrorCode {
 
 
     USER_NOT_FOUND("MICRO-SERVICE-ERR1", "User not found"),
-    USER_ALREADY_EXISTS("MICRO-SERVICE-ERR2", "Email not available");
+    USER_ALREADY_EXISTS("MICRO-SERVICE-ERR2", "Email not available"),
+    UNABLE_TO_DECRYPT_API_KEY("MICRO-SERVICE-ERR3", "Unable to decrypt Datadog api key"),
+    UNABLE_TO_DECRYPT_APPLICATION_KEY("MICRO-SERVICE-ERR4", "Unable to decrypt Datadog application key");
 
     private final String code;
     private final String description;

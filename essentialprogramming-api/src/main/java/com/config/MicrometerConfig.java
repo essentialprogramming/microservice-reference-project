@@ -1,6 +1,9 @@
 package com.config;
 
 import com.api.env.resources.AppResources;
+import com.api.exceptions.codes.ErrorCode;
+import com.crypto.Crypt;
+import com.util.exceptions.ServiceException;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
@@ -12,10 +15,12 @@ import io.micrometer.jmx.JmxMeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.security.GeneralSecurityException;
 import java.time.Duration;
 
 @Configuration
 public class MicrometerConfig {
+    private static final String DECRYPTION_KEY = "supercalifragilisticexpialidocious";
 
     @Bean(name = "microMeterRegistry")
     public MeterRegistry meterRegistry() {
@@ -42,12 +47,12 @@ public class MicrometerConfig {
 
             @Override
             public String apiKey() {
-                return AppResources.DATADOG_API_KEY.value();
+                return decryptKey(AppResources.DATADOG_API_KEY);
             }
 
             @Override
             public String applicationKey() {
-                return AppResources.DATADOG_APPLICATION_KEY.value();
+                return decryptKey(AppResources.DATADOG_APPLICATION_KEY);
             }
 
             @Override
@@ -70,5 +75,16 @@ public class MicrometerConfig {
                 return AppResources.DATADOG_DESCRIPTION.value();
             }
         };
+    }
+
+    private static String decryptKey(AppResources appResources) {
+        try {
+            return Crypt.decrypt(appResources.value(), DECRYPTION_KEY);
+        } catch (GeneralSecurityException e) {
+
+            if (appResources.equals(AppResources.DATADOG_API_KEY)) {
+                throw new ServiceException(ErrorCode.UNABLE_TO_DECRYPT_API_KEY, e);
+            } else throw new ServiceException(ErrorCode.UNABLE_TO_DECRYPT_APPLICATION_KEY, e);
+        }
     }
 }
