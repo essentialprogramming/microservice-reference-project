@@ -51,8 +51,7 @@ public class Log4jMDCAdapter implements MDCAdapter {
 
     }
 
-    @SuppressWarnings("unchecked")
-    public void setContextMap(final Map map) {
+    public void setContextMap(final Map<String, String> map) {
         ThreadContext.clearMap();
         ThreadContext.putAll(map);
     }

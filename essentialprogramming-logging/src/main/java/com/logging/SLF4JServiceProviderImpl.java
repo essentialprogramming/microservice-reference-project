@@ -6,7 +6,7 @@ import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
 /**
- * A custom static logger binder that binds to a user defined {@link ILoggerFactory}.
+ * A custom logger binder that binds to a user defined {@link ILoggerFactory}.
  */
 public class SLF4JServiceProviderImpl implements SLF4JServiceProvider {
 

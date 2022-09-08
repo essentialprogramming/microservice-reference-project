@@ -62,6 +62,7 @@ public class Log4jMarker implements Marker {
         return this.marker.getName();
     }
 
+    @Deprecated
     public boolean hasChildren() {
         return this.marker.hasParents();
     }

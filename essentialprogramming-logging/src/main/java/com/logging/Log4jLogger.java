@@ -172,10 +172,7 @@ public class Log4jLogger implements org.slf4j.Logger {
     }
 
     public void warn(final String format, final Object o) {
-        ThreadContext.put(WARN_ID.getValue(), format);
-        if (o instanceof String) this.logger.logIfEnabled(FQCN, WARN, null, (String)o);
-        else this.logger.logIfEnabled(FQCN, WARN, null, format, o);
-        ThreadContext.clearMap();
+        this.logger.logIfEnabled(FQCN, WARN, null, format, o);
     }
 
     public void warn(final String format, final Object arg1, final Object arg2) {
@@ -222,10 +219,10 @@ public class Log4jLogger implements org.slf4j.Logger {
         this.logger.logIfEnabled(FQCN, ERROR, null, format);
     }
 
-    public void error(final String format, final Object o) {
-        ThreadContext.put(ERROR_ID.getValue(), format);
-        if (o instanceof String) this.logger.logIfEnabled(FQCN, ERROR, null, (String)o);
-        else this.logger.logIfEnabled(FQCN, ERROR, null, format, o);
+    public void error(final String errorId, final Object message) {
+        ThreadContext.put(ERROR_ID.getValue(), errorId);
+        if (message instanceof String) this.logger.logIfEnabled(FQCN, ERROR, null, (String)message);
+        else this.logger.logIfEnabled(FQCN, ERROR, null, errorId, message);
         ThreadContext.clearMap();
     }
 
