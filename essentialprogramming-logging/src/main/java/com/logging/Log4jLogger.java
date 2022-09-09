@@ -4,7 +4,7 @@ import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.slf4j.Marker;
 
-import static com.logging.LoggingKey.*;
+import static com.logging.LoggingAttributes.*;
 import static org.apache.logging.log4j.Level.*;
 
 public class Log4jLogger implements org.slf4j.Logger {
@@ -220,8 +220,8 @@ public class Log4jLogger implements org.slf4j.Logger {
     }
 
     public void error(final String errorId, final Object message) {
-        ThreadContext.put(ERROR_ID.getValue(), errorId);
-        if (message instanceof String) this.logger.logIfEnabled(FQCN, ERROR, null, (String)message);
+        ThreadContext.put(ERROR_ID, errorId);
+        if (message instanceof String) this.logger.logIfEnabled(FQCN, ERROR, null, (String) message);
         else this.logger.logIfEnabled(FQCN, ERROR, null, errorId, message);
         ThreadContext.clearMap();
     }
@@ -270,10 +270,10 @@ public class Log4jLogger implements org.slf4j.Logger {
         if (marker == null) {
             return null;
         } else if (marker instanceof Log4jMarker) {
-            return ((Log4jMarker)marker).getLog4jMarker();
+            return ((Log4jMarker) marker).getLog4jMarker();
         } else {
             Log4jMarkerFactory factory = (Log4jMarkerFactory) SLF4JServiceProviderImpl.getSingleton().getMarkerFactory();
-            return ((Log4jMarker)factory.getMarker(marker)).getLog4jMarker();
+            return ((Log4jMarker) factory.getMarker(marker)).getLog4jMarker();
         }
     }
 }
