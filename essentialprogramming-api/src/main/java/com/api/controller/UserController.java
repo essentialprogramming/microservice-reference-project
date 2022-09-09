@@ -23,8 +23,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.MarkerManager;
-import org.slf4j.MarkerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -44,7 +42,6 @@ import java.util.concurrent.ExecutorService;
 
 import static com.api.config.AppConfig.USER_API;
 import static com.api.exceptions.codes.ErrorCode.USER_ALREADY_EXISTS;
-import static org.slf4j.MarkerFactory.getMarker;
 
 @Tag(description = USER_API, name = "User Services")
 @ApiErrorResponses

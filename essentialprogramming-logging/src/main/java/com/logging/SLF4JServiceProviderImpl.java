@@ -20,12 +20,12 @@ public class SLF4JServiceProviderImpl implements SLF4JServiceProvider {
     }
 
     /**
-     * The ILoggerFactory instance returned by the {@link #getLoggerFactory} method should always be
+     * The ILoggerFactory, IMarkerFactory and MDCAdapter instances should always be
      * the same object.
      */
-    private ILoggerFactory loggerFactory;
-    private IMarkerFactory markerFactory;
-    private MDCAdapter mdcAdapter;
+    private final ILoggerFactory loggerFactory;
+    private final IMarkerFactory markerFactory;
+    private final MDCAdapter mdcAdapter;
 
     public SLF4JServiceProviderImpl() {
         loggerFactory = new Log4jFactory();
@@ -55,8 +55,6 @@ public class SLF4JServiceProviderImpl implements SLF4JServiceProvider {
 
     @Override
     public void initialize() {
-        loggerFactory = new Log4jFactory();
-        markerFactory = new Log4jMarkerFactory();
-        mdcAdapter= new Log4jMDCAdapter();
+     //Currently, not needed.
     }
 }
