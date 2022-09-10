@@ -28,7 +28,7 @@ public class SLF4JServiceProviderImpl implements SLF4JServiceProvider {
     private final MDCAdapter mdcAdapter;
 
     public SLF4JServiceProviderImpl() {
-        loggerFactory = new Log4jFactory();
+        loggerFactory = new Log4jLoggerFactory();
         markerFactory = new Log4jMarkerFactory();
         mdcAdapter= new Log4jMDCAdapter();
     }

@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import java.util.function.Predicate;
 
 
-public class Log4jFactory extends AbstractLoggerAdapter<Logger>  implements ILoggerFactory {
+public class Log4jLoggerFactory extends AbstractLoggerAdapter<Logger>  implements ILoggerFactory {
 
     private static final Predicate<Class<?>> CALLER_PREDICATE = (clazz) -> !AbstractLoggerAdapter.class.equals(clazz) && !clazz.getName().startsWith("org.slf4j");
 
@@ -20,7 +20,7 @@ public class Log4jFactory extends AbstractLoggerAdapter<Logger>  implements ILog
     }
 
     protected LoggerContext getContext() {
-        final Class<?> anchor = LogManager.getFactory().isClassLoaderDependent() ? StackLocatorUtil.getCallerClass(Log4jFactory.class, CALLER_PREDICATE) : null;
+        final Class<?> anchor = LogManager.getFactory().isClassLoaderDependent() ? StackLocatorUtil.getCallerClass(Log4jLoggerFactory.class, CALLER_PREDICATE) : null;
         return anchor == null ? LogManager.getContext(false) : this.getContext(anchor);
     }
 
