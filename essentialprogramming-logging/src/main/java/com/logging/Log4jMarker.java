@@ -11,47 +11,55 @@ import java.util.Objects;
 
 public class Log4jMarker implements Marker {
 
-    public static final long serialVersionUID = 1590472L;
+    public static final long serialVersionUID = 1570372L;
+
     private final IMarkerFactory factory;
     private final org.apache.logging.log4j.Marker marker;
 
-    public Log4jMarker(final org.apache.logging.log4j.Marker marker) {
-        this.factory = SLF4JServiceProviderImpl.getSingleton().getMarkerFactory();
+    public Log4jMarker(final IMarkerFactory markerFactory,
+                       final org.apache.logging.log4j.Marker marker
+    ) {
+        this.factory = markerFactory;
         this.marker = marker;
     }
 
     public void add(final Marker marker) {
         if (marker == null) {
             throw new IllegalArgumentException();
-        } else {
-            Marker m = this.factory.getMarker(marker.getName());
-            this.marker.addParents(((Log4jMarker)m).getLog4jMarker());
         }
+
+        Marker m = this.factory.getMarker(marker.getName());
+        this.marker.addParents(((Log4jMarker) m).getLog4jMarker());
+
     }
 
     public boolean contains(final Marker marker) {
         if (marker == null) {
             throw new IllegalArgumentException();
-        } else {
-            return this.marker.isInstanceOf(marker.getName());
         }
+
+        return this.marker.isInstanceOf(marker.getName());
+
     }
 
     public boolean contains(final String s) {
         return s != null && this.marker.isInstanceOf(s);
     }
 
-    public boolean equals(final Object obj) {
-        if (this == obj) {
+    public boolean equals(final Object object) {
+        if (this == object) {
             return true;
-        } else if (obj == null) {
-            return false;
-        } else if (!(obj instanceof Log4jMarker)) {
-            return false;
-        } else {
-            Log4jMarker other = (Log4jMarker)obj;
-            return Objects.equals(this.marker, other.marker);
         }
+        if (object == null) {
+            return false;
+        }
+        if (!(object instanceof Log4jMarker)) {
+            return false;
+        }
+
+        final Log4jMarker other = (Log4jMarker) object;
+        return Objects.equals(this.marker, other.marker);
+
     }
 
     public org.apache.logging.log4j.Marker getLog4jMarker() {

@@ -84,8 +84,7 @@ public class UserController {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
         if (!isValid) {
 
-            log.error(USER_ALREADY_EXISTS.getCode(), USER_ALREADY_EXISTS.getDescription());
-
+            log.error(USER_ALREADY_EXISTS.getCode(), "User with email=`{}` already exists", userInput.getEmail());
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
         }
         return userService.save(userInput, language);
