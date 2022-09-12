@@ -10,7 +10,10 @@ import org.apache.logging.log4j.status.StatusLogger;
 import org.slf4j.Marker;
 import org.slf4j.spi.LocationAwareLogger;
 
+import java.util.Arrays;
+
 import static com.logging.LoggingAttributes.*;
+import static java.util.Arrays.copyOfRange;
 import static org.apache.logging.log4j.Level.*;
 
 public class Log4jLogger implements LocationAwareLogger {
@@ -223,17 +226,36 @@ public class Log4jLogger implements LocationAwareLogger {
         );
     }
 
-    public void error(final String format, final Object... args) {
-        this.log4jLogger.logIfEnabled(FQCN, ERROR, null, format, args);
+    public void error(final String errorId, final Object... messageAndParams) {
+        final LoggingContext loggingContext = new LoggingContext()
+                .with(ERROR_ID, errorId);
+
+        runWithContext(
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null,
+                        messageAndParams[0].toString(), copyOfRange(messageAndParams, 1, messageAndParams.length)),
+                loggingContext
+        );
     }
 
-    public void error(final String format, final Throwable t) {
-        this.log4jLogger.logIfEnabled(FQCN, ERROR, null, format, t);
+    public void error(final String errorId, final Throwable throwable) {
+        final LoggingContext loggingContext = new LoggingContext()
+                .with(ERROR_ID, errorId);
+
+        runWithContext(
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null, throwable.getMessage(), throwable),
+                loggingContext
+        );
     }
 
 
-    public void error(final Marker marker, final String format) {
-        this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), format);
+    public void error(final Marker marker, final String errorId) {
+        final LoggingContext loggingContext = new LoggingContext()
+                .with(ERROR_ID, errorId);
+
+        runWithContext(
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), "Error {} occurred", errorId),
+                loggingContext
+        );
     }
 
     public void error(final Marker marker, final String errorId, final Object message) {
@@ -246,16 +268,35 @@ public class Log4jLogger implements LocationAwareLogger {
         );
     }
 
-    public void error(final Marker marker, final String s, final Object o, final Object o1) {
-        this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), s, o, o1);
+    public void error(final Marker marker, final String errorId, final Object message, final Object param) {
+        final LoggingContext loggingContext = new LoggingContext()
+                .with(ERROR_ID, errorId);
+
+        runWithContext(
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), message.toString(), param),
+                loggingContext
+        );
     }
 
-    public void error(final Marker marker, final String s, final Object... objects) {
-        this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), s, objects);
+    public void error(final Marker marker, final String errorId, final Object... messageAndParams) {
+        final LoggingContext loggingContext = new LoggingContext()
+                .with(ERROR_ID, errorId);
+
+        runWithContext(
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker),
+                        messageAndParams[0].toString(), copyOfRange(messageAndParams, 1, messageAndParams.length)),
+                loggingContext
+        );
     }
 
-    public void error(final Marker marker, final String s, final Throwable throwable) {
-        this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), s, throwable);
+    public void error(final Marker marker, final String errorId, final Throwable throwable) {
+        final LoggingContext loggingContext = new LoggingContext()
+                .with(ERROR_ID, errorId);
+
+        runWithContext(
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), throwable.getMessage(), throwable),
+                loggingContext
+        );
     }
 
     private static org.apache.logging.log4j.Marker getMarker(final Marker marker) {
