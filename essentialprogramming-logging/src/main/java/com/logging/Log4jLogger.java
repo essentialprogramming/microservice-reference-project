@@ -211,7 +211,7 @@ public class Log4jLogger implements LocationAwareLogger {
                 .with(ERROR_ID, errorId);
 
         runWithContext(
-                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null, message.toString()),
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null, String.valueOf(message)),
                 loggingContext
         );
     }
@@ -221,7 +221,7 @@ public class Log4jLogger implements LocationAwareLogger {
                 .with(ERROR_ID, errorId);
 
         runWithContext(
-                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null, message.toString(), param),
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null, String.valueOf(message), param),
                 loggingContext
         );
     }
@@ -232,7 +232,7 @@ public class Log4jLogger implements LocationAwareLogger {
 
         runWithContext(
                 () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, null,
-                        messageAndParams[0].toString(), copyOfRange(messageAndParams, 1, messageAndParams.length)),
+                        String.valueOf(messageAndParams[0]), Arrays.copyOfRange(messageAndParams, 1, messageAndParams.length)),
                 loggingContext
         );
     }
@@ -263,7 +263,7 @@ public class Log4jLogger implements LocationAwareLogger {
                 .with(ERROR_ID, errorId);
 
         runWithContext(
-                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), message.toString()),
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), String.valueOf(message)),
                 loggingContext
         );
     }
@@ -273,7 +273,7 @@ public class Log4jLogger implements LocationAwareLogger {
                 .with(ERROR_ID, errorId);
 
         runWithContext(
-                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), message.toString(), param),
+                () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker), String.valueOf(message), param),
                 loggingContext
         );
     }
@@ -284,7 +284,7 @@ public class Log4jLogger implements LocationAwareLogger {
 
         runWithContext(
                 () -> this.log4jLogger.logIfEnabled(FQCN, ERROR, getMarker(marker),
-                        messageAndParams[0].toString(), copyOfRange(messageAndParams, 1, messageAndParams.length)),
+                        String.valueOf(messageAndParams[0]), copyOfRange(messageAndParams, 1, messageAndParams.length)),
                 loggingContext
         );
     }
