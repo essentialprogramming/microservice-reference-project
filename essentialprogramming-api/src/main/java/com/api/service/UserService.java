@@ -2,7 +2,6 @@ package com.api.service;
 
 import com.api.entities.User;
 import com.api.env.resources.AppResources;
-import com.api.exceptions.codes.ErrorCode;
 import com.api.mapper.UserMapper;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
@@ -21,7 +20,6 @@ import com.util.io.FileInputResource;
 import com.util.web.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.logging.log4j.ThreadContext;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
