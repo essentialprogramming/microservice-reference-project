@@ -1,7 +1,6 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
-import com.api.entities.User;
 import com.api.exceptions.codes.ErrorCode;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
@@ -16,6 +15,8 @@ import com.util.async.ExecutorsProvider;
 import com.util.enums.HTTPCustomStatus;
 import com.util.enums.Language;
 import com.util.exceptions.ApiException;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,6 +40,7 @@ import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 
@@ -51,14 +53,16 @@ import static com.api.config.AppConfig.USER_API;
 public class UserController {
 
     private final UserService userService;
+    private final MeterRegistry meterRegistry;
 
 
     @Context
     private Language language;
 
     @Inject
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, MeterRegistry meterRegistry) {
         this.userService = userService;
+        this.meterRegistry = meterRegistry;
     }
 
 
@@ -140,15 +144,20 @@ public class UserController {
     @Anonymous
     public void loadAll(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
 
+        Timer timerExample = Timer
+                .builder("timer.load.users")
+                .description("measures the time taken to load all users")
+                .register(meterRegistry);
+        Callable<List<UserJSON>> findAllUsersTimed = timerExample.wrap((Callable<List<UserJSON>>) this::findAllUsers);
+
         final ExecutorService executorService = ExecutorsProvider.getExecutorService();
-        Computation.computeAsync(this::findAllUsers, executorService)
+        Computation.computeAsync(findAllUsersTimed, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
-
     }
 
-    private List<User> findAllUsers() {
-        return userService.loadAll();
+    public List<UserJSON> findAllUsers() {
+        return userService.loadAllAsJSON();
     }
 
     @DELETE

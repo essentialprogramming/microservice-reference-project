@@ -4,6 +4,7 @@ import com.api.env.resources.AppResources;
 import com.api.exceptions.codes.ErrorCode;
 import com.crypto.Crypt;
 import com.util.exceptions.ServiceException;
+import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
@@ -35,6 +36,11 @@ public class MicrometerConfig {
         compositeRegistry.add(datadogMeterRegistry);
 
         return compositeRegistry;
+    }
+
+    @Bean
+    public TimedAspect timedAspect(MeterRegistry registry) {
+        return new TimedAspect(registry);
     }
 
     private DatadogConfig configureDatadog() {
