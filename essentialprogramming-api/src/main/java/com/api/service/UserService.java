@@ -13,6 +13,8 @@ import com.crypto.PasswordHash;
 import com.email.service.EmailManager;
 import com.internationalization.EmailMessages;
 import com.internationalization.Messages;
+import com.logging.Log4jMarkerFactory;
+import com.logging.LogField;
 import com.util.annotations.LogExecutionTime;
 import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
@@ -20,9 +22,11 @@ import com.util.io.FileInputResource;
 import com.util.web.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.weld.util.collections.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -43,6 +48,7 @@ import static com.config.ObjectMapperConfig.ObjectMapperProvider;
 import static com.util.collection.MapUtils.flatMap;
 import static com.util.json.JsonUtil.map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -54,6 +60,7 @@ public class UserService {
     private final EmailManager emailManager;
     private final ObjectMapperProvider objectMapperProvider;
     private final UserReaderService userReaderService;
+    private final Log4jMarkerFactory markerFactory = new Log4jMarkerFactory();
 
     @Qualifier(UTC_CLOCK)
     private final Clock clock;
@@ -62,31 +69,46 @@ public class UserService {
     @Transactional
     public UserJSON save(UserInput input, com.util.enums.Language language) throws GeneralSecurityException {
 
-        final User user = UserMapper.inputToUser(input);
-        final User result = saveUser(user, input, language);
+//        final User user = UserMapper.inputToUser(input);
+//        final User result = saveUser(user, input, language);
+//
+//        final LocalDateTime createdDate = LocalDateTime.now(clock);
+//        user.setCreatedDate(createdDate);
+//
+//        final String validationKey = Crypt.encrypt(
+//                NanoIdUtils.randomNanoId(),
+//                AppResources.ENCRYPTION_KEY.value()
+//        );
+//        final String encryptedUserKey = Crypt.encrypt(
+//                result.getUserKey(),
+//                AppResources.ENCRYPTION_KEY.value()
+//        );
+//
+//        String url = AppResources.ACCOUNT_CONFIRMATION_URL.value() + "/" + validationKey + "/" + encryptedUserKey;
+//
+//        Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
+//                .put("fullName", result.getFullName())
+//                .put("confirmationLink", url)
+//                .build();
+//        emailManager.send(result.getEmail(), EmailMessages.get("new_user.subject", language.getLocale()), Templates.NEW_USER, templateVariables, language.getLocale());
+//
+//        return UserMapper.userToJson(result);
 
-        final LocalDateTime createdDate = LocalDateTime.now(clock);
-        user.setCreatedDate(createdDate);
+        LogField logField = new LogField("test1", new BigDecimal(1), false);
+        LogField logField2 = new LogField("test2", new BigDecimal(2), false);
+        LogField logField3 = new LogField("test3", new BigDecimal(3), false);
 
-        final String validationKey = Crypt.encrypt(
-                NanoIdUtils.randomNanoId(),
-                AppResources.ENCRYPTION_KEY.value()
-        );
-        final String encryptedUserKey = Crypt.encrypt(
-                result.getUserKey(),
-                AppResources.ENCRYPTION_KEY.value()
-        );
+        Marker marker1 = markerFactory.getMarker(logField.getFieldName(), logField.getFieldValue());
+        Marker marker2 = markerFactory.getMarker(logField2.getFieldName(), logField2.getFieldValue());
+        Marker marker3 = markerFactory.getMarker(logField3.getFieldName(), logField3.getFieldValue());
 
-        String url = AppResources.ACCOUNT_CONFIRMATION_URL.value() + "/" + validationKey + "/" + encryptedUserKey;
+        marker1.add(marker2);
+        marker1.add(marker3);
 
-        Map<String, Object> templateVariables = ImmutableMap.<String, Object>builder()
-                .put("fullName", result.getFullName())
-                .put("confirmationLink", url)
-                .build();
-        emailManager.send(result.getEmail(), EmailMessages.get("new_user.subject", language.getLocale()), Templates.NEW_USER, templateVariables, language.getLocale());
+        log.error(marker1, "something went wrong");
+        log.error(marker2, "unexpected error");
 
-        return UserMapper.userToJson(result);
-
+        return null;
     }
 
     @Transactional

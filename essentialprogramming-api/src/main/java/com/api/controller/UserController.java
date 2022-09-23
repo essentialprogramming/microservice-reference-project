@@ -8,6 +8,8 @@ import com.api.security.AllowUserIf;
 import com.api.service.UserService;
 import com.exception.ExceptionHandler;
 import com.internationalization.Messages;
+import com.logging.Log4jMarkerFactory;
+import com.logging.LogField;
 import com.token.validation.auth.AuthUtils;
 import com.util.annotations.ApiErrorResponses;
 import com.util.async.Computation;
@@ -23,6 +25,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Marker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -35,6 +40,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.concurrent.CompletionException;
@@ -73,12 +79,20 @@ public class UserController {
     @Anonymous
     public void createUser(@Valid UserInput userInput, @Suspended AsyncResponse asyncResponse) {
 
-        final ExecutorService executorService = ExecutorsProvider.getExecutorService();
-        Computation.computeAsync(() -> createUser(userInput, language), executorService)
-                .thenApplyAsync(json -> asyncResponse.resume(Response.status(201).entity(json).build()), executorService)
-                .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
+//        final ExecutorService executorService = ExecutorsProvider.getExecutorService();
+//        Computation.computeAsync(() -> createUser(userInput, language), executorService)
+//                .thenApplyAsync(json -> asyncResponse.resume(Response.status(201).entity(json).build()), executorService)
+//                .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
 
+            try {
+                userService.save(null, null);
+            } catch (Exception e) {
+                //ignore
+            }
+
+            asyncResponse.resume(null);
     }
+
 
     private Serializable createUser(UserInput userInput, Language language) throws GeneralSecurityException, ApiException {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());

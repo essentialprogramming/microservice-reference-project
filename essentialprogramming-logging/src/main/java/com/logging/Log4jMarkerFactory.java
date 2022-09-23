@@ -8,38 +8,50 @@ import org.slf4j.Marker;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class Log4jMarkerFactory implements IMarkerFactory {
 
-    private final ConcurrentMap<String, Marker> markerMap = new ConcurrentHashMap<>();
+    private final MarkerMap markerMap = MarkerMap.getInstance();
 
     public Log4jMarkerFactory() {
     }
 
-    public Marker getMarker(final String name) {
+    public Log4jMarker getMarker(final String name) {
         if (name == null) {
             throw new IllegalArgumentException("Marker name must not be null");
         }
-        final Marker marker = this.markerMap.get(name);
+        final Log4jMarker marker = this.markerMap.get(name);
 
         return marker != null
                 ? marker
-                : this.addMarkerIfAbsent(name, MarkerManager.getMarker(name));
+                : this.addMarkerIfAbsent(name, MarkerManager.getMarker(name), null);
     }
 
-    public Marker getMarker(final Marker marker) {
+    public Log4jMarker getMarker(final String name, final Object value) {
+        if (name == null) {
+            throw new IllegalArgumentException("Marker name must not be null");
+        }
+        final Log4jMarker marker = this.markerMap.get(name);
+
+        return marker != null
+                ? marker
+                : this.addMarkerIfAbsent(name, MarkerManager.getMarker(name), value);
+    }
+
+    public Log4jMarker getMarker(final Marker marker) {
         if (marker == null) {
             throw new IllegalArgumentException("Marker must not be null");
         }
 
-        final Marker m = this.markerMap.get(marker.getName());
-        return m != null ? m : this.addMarkerIfAbsent(marker.getName(), convertMarker(marker));
+        final Log4jMarker m = this.markerMap.get(marker.getName());
+        return m != null ? m : this.addMarkerIfAbsent(marker.getName(), convertMarker(marker), null);
     }
 
-    private Marker addMarkerIfAbsent(final String name, final org.apache.logging.log4j.Marker log4jMarker) {
-        final Marker marker = new Log4jMarker(this, log4jMarker);
+    private Log4jMarker addMarkerIfAbsent(final String name,
+                                  final org.apache.logging.log4j.Marker log4jMarker,
+                                  final Object value) {
+
+        final Log4jMarker marker = new Log4jMarker(this, log4jMarker, value);
         this.markerMap.putIfAbsent(name, marker);
 
         return this.markerMap.get(name);

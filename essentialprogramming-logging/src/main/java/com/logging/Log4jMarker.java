@@ -1,5 +1,7 @@
 package com.logging;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.MarkerManager;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.Marker;
@@ -16,11 +18,16 @@ public class Log4jMarker implements Marker {
     private final IMarkerFactory factory;
     private final org.apache.logging.log4j.Marker marker;
 
+    @Getter
+    private final Object value;
+
     public Log4jMarker(final IMarkerFactory markerFactory,
-                       final org.apache.logging.log4j.Marker marker
+                       final org.apache.logging.log4j.Marker marker,
+                       final Object value
     ) {
         this.factory = markerFactory;
         this.marker = marker;
+        this.value = value;
     }
 
     public void add(final Marker marker) {
