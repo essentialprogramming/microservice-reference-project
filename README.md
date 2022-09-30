@@ -79,4 +79,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     - Window functions 
       - https://blog.jooq.org/probably-the-coolest-sql-feature-window-functions/
       -  https://blog.jooq.org/the-difference-between-row_number-rank-and-dense_rank/
+    - TOP N Queries 
+      - https://blog.jooq.org/how-to-write-efficient-top-n-queries-in-sql/
+
     - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
