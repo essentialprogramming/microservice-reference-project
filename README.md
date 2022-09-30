@@ -68,6 +68,11 @@ Visit `localhost:8080/apidoc` to see the endpoints.
   - Native Queries
     - Defining and executing native queries : https://thorben-janssen.com/jpa-native-queries/#Createnbspad-hoc_native_queries
     - How to return DTOs from native queries : https://thorben-janssen.com/spring-data-jpa-dto-native-queries/
+   
+   - Spring Data JPA
+    - DTO projections : https://vladmihalcea.com/spring-jpa-dto-projection/
+    
     
   - JOOQ
     - Window functions : https://blog.jooq.org/probably-the-coolest-sql-feature-window-functions/
+    - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
