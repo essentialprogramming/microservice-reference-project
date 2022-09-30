@@ -62,3 +62,8 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
      [depgraph-maven-plugin](https://github.com/ferstl/depgraph-maven-plugin) :
     `mvn com.github.ferstl:depgraph-maven-plugin:3.3.0:graph -DrepeatTransitiveDependenciesInTextGraph -DshowVersions -DgraphFormat=text -DshowGroupIds -DshowConflicts -DshowDuplicates`
+    
+   
+### 🌀 JPA (Hibernate) 
+  - Native Queries
+    - Defining and executing native queries : https://thorben-janssen.com/jpa-native-queries/#Createnbspad-hoc_native_queries
