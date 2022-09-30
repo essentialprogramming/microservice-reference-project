@@ -67,3 +67,4 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 ### 🌀 JPA (Hibernate) 
   - Native Queries
     - Defining and executing native queries : https://thorben-janssen.com/jpa-native-queries/#Createnbspad-hoc_native_queries
+    - How to return DTOs from native queries : https://thorben-janssen.com/spring-data-jpa-dto-native-queries/
