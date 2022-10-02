@@ -10,7 +10,8 @@ import com.token.validation.response.ValidationResponse;
 import java.io.IOException;
 import java.security.Key;
 import java.time.Instant;
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public class JwtUtil {
 
@@ -61,8 +62,9 @@ public class JwtUtil {
             isSignatureValid = signatureVerifier.verify(jwtToken, key);
             claims = jwtToken.getClaims();
 
-            Instant now = Instant.now();
-            long secondsSinceEpoch = Date.from(now).getTime() / 1000L;
+            final Instant now = Instant.now();
+            long secondsSinceEpoch = OffsetDateTime.ofInstant(now, ZoneOffset.UTC).toEpochSecond(); //Legacy: long secondsSinceEpoch = Date.from(now).getTime() / 1000L;
+
             isExpired = (secondsSinceEpoch >= claims.getExpiration());
 
         } catch (IOException e) {
