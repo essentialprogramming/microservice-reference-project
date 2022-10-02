@@ -62,3 +62,24 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
      [depgraph-maven-plugin](https://github.com/ferstl/depgraph-maven-plugin) :
     `mvn com.github.ferstl:depgraph-maven-plugin:3.3.0:graph -DrepeatTransitiveDependenciesInTextGraph -DshowVersions -DgraphFormat=text -DshowGroupIds -DshowConflicts -DshowDuplicates`
+    
+   
+### 🌀 JPA (Hibernate) 
+  - Native Queries
+    - Defining and executing native queries
+       - https://thorben-janssen.com/jpa-native-queries/#Createnbspad-hoc_native_queries
+    - How to return DTOs from native queries 
+       - https://thorben-janssen.com/spring-data-jpa-dto-native-queries/
+   
+  - Spring Data JPA
+    - DTO projections : https://vladmihalcea.com/spring-jpa-dto-projection/
+    
+    
+  - JOOQ
+    - Window functions 
+      - https://blog.jooq.org/probably-the-coolest-sql-feature-window-functions/
+      -  https://blog.jooq.org/the-difference-between-row_number-rank-and-dense_rank/
+    - TOP N Queries 
+      - https://blog.jooq.org/how-to-write-efficient-top-n-queries-in-sql/
+
+    - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
