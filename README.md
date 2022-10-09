@@ -83,3 +83,6 @@ Visit `localhost:8080/apidoc` to see the endpoints.
       - https://blog.jooq.org/how-to-write-efficient-top-n-queries-in-sql/
 
     - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
+    
+    ### 🌀 WSL 2
+    https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
