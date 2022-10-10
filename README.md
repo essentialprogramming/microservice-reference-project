@@ -85,5 +85,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 
     - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
     
+  - SQL RANK functions: https://www.sqlshack.com/overview-of-sql-rank-functions/
+    
     ### 🌀 WSL 2
     https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
