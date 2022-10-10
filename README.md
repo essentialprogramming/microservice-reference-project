@@ -80,7 +80,9 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
     
   - JOOQ
-    - Hibernate & JOOQ interation: https://thorben-janssen.com/hibernate-jooq-a-match-made-in-heaven/ 
+    - Hibernate & JOOQ interation: 
+       -  https://thorben-janssen.com/hibernate-jooq-a-match-made-in-heaven/ 
+       -  https://thorben-janssen.com/hibernate-tip-how-to-integrate-an-external-query-builder/                
     - Window functions 
       - https://blog.jooq.org/probably-the-coolest-sql-feature-window-functions/
       -  https://blog.jooq.org/the-difference-between-row_number-rank-and-dense_rank/
