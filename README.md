@@ -86,7 +86,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
     
  - Blaze Persistence – The Best Way to Write JPA Criteria Queries
-      - https://persistence.blazebit.com/documentation/1.4/core/manual/en_US/index.html
+      - https://persistence.blazebit.com/documentation/1.6/core/manual/en_US/index.html
       - https://vladmihalcea.com/blaze-persistence-jpa-criteria-queries/
   - SQL RANK functions: https://www.sqlshack.com/overview-of-sql-rank-functions/
     
