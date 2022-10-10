@@ -74,6 +74,10 @@ Visit `localhost:8080/apidoc` to see the endpoints.
   - Spring Data JPA
     - DTO projections : https://vladmihalcea.com/spring-jpa-dto-projection/
     
+  - Hibernate 6 
+    - Hibernate 6 and JPQL Window Functions: https://vladmihalcea.com/hibernate-jpql-window-functions/
+    
+    
     
   - JOOQ
     - Hibernate & JOOQ interation: https://thorben-janssen.com/hibernate-jooq-a-match-made-in-heaven/ 
@@ -88,7 +92,11 @@ Visit `localhost:8080/apidoc` to see the endpoints.
  - Blaze Persistence – The Best Way to Write JPA Criteria Queries
       - https://persistence.blazebit.com/documentation/1.6/core/manual/en_US/index.html
       - https://vladmihalcea.com/blaze-persistence-jpa-criteria-queries/
-  - SQL RANK functions: https://www.sqlshack.com/overview-of-sql-rank-functions/
+      
+ - SQL RANK functions: https://www.sqlshack.com/overview-of-sql-rank-functions/
+ - WINDOW functions:   https://docs.snowflake.com/en/sql-reference/functions-analytic.html
+   
+    
     
     ### 🌀 WSL 2
     https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
