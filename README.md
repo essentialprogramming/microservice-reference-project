@@ -65,6 +65,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
    
 ### 🌀 JPA (Hibernate) 
+  - JPA(Hibernate) limits: [Is your query too complex for JPA and Hibernate ?](https://thorben-janssen.com/query-complex-jpa-hibernate/#1_Use_subqueries_outside_of_WHERE_and_HAVING_clauses)
   - Native Queries
     - Defining and executing native queries
        - https://thorben-janssen.com/jpa-native-queries/#Createnbspad-hoc_native_queries
