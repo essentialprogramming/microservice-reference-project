@@ -11,7 +11,7 @@
     <Appenders>
 
         <Console name="consoleAppender" target="SYSTEM_OUT">
-            <PatternLayout disableAnsi="false" pattern=" %d{yyyy-MM-dd HH:mm:ss} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=blue, DEBUG=green bold, TRACE=light blue}  --- [%15.15t] %style{%-41.41c{9.}}{cyan} : %m%n%ex"/>
+            <PatternLayout disableAnsi="false" pattern=" %d{yyyy-MM-dd HH:mm:ss} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=blue, DEBUG=green bold, TRACE=green}  --- [%15.15t] %style{%-41.41c{9.}}{cyan} : %m%n%ex"/>
         </Console>
 
 

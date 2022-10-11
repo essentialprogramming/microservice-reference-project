@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.ThreadContext;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -45,6 +44,7 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 
 import static com.api.config.AppConfig.USER_API;
+import static com.api.exceptions.codes.ErrorCode.USER_ALREADY_EXISTS;
 
 @Tag(description = USER_API, name = "User Services")
 @ApiErrorResponses
@@ -54,7 +54,6 @@ public class UserController {
 
     private final UserService userService;
     private final MeterRegistry meterRegistry;
-
 
     @Context
     private Language language;
@@ -90,10 +89,7 @@ public class UserController {
         boolean isValid = userService.checkAvailabilityByEmail(userInput.getEmail());
         if (!isValid) {
 
-            ThreadContext.put("errorID", ErrorCode.USER_ALREADY_EXISTS.getCode());
-            log.error(ErrorCode.USER_ALREADY_EXISTS.getDescription());
-            ThreadContext.clearMap();
-
+            log.error(USER_ALREADY_EXISTS.getCode(), "User with email=`{}` already exists", userInput.getEmail());
             throw new ApiException(Messages.get("EMAIL.ALREADY.TAKEN", language), HTTPCustomStatus.INVALID_REQUEST);
         }
         return userService.save(userInput, language);

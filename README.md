@@ -62,3 +62,44 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
      [depgraph-maven-plugin](https://github.com/ferstl/depgraph-maven-plugin) :
     `mvn com.github.ferstl:depgraph-maven-plugin:3.3.0:graph -DrepeatTransitiveDependenciesInTextGraph -DshowVersions -DgraphFormat=text -DshowGroupIds -DshowConflicts -DshowDuplicates`
+    
+   
+### 🌀 JPA (Hibernate) 
+  - JPA(Hibernate) limits: [Is your query too complex for JPA and Hibernate ?](https://thorben-janssen.com/query-complex-jpa-hibernate/#1_Use_subqueries_outside_of_WHERE_and_HAVING_clauses)
+  - Native Queries
+    - Defining and executing native queries
+       - https://thorben-janssen.com/jpa-native-queries/#Createnbspad-hoc_native_queries
+    - How to return DTOs from native queries 
+       - https://thorben-janssen.com/spring-data-jpa-dto-native-queries/
+   
+  - Spring Data JPA
+    - DTO projections : https://vladmihalcea.com/spring-jpa-dto-projection/
+    
+  - Hibernate 6 
+    - Hibernate 6 and JPQL Window Functions: https://vladmihalcea.com/hibernate-jpql-window-functions/
+    
+    
+    
+  - JOOQ
+    - Hibernate & JOOQ interation: 
+       -  https://thorben-janssen.com/hibernate-jooq-a-match-made-in-heaven/ 
+       -  https://thorben-janssen.com/hibernate-tip-how-to-integrate-an-external-query-builder/                
+    - Window functions 
+      - https://blog.jooq.org/probably-the-coolest-sql-feature-window-functions/
+      -  https://blog.jooq.org/the-difference-between-row_number-rank-and-dense_rank/
+    - TOP N Queries 
+      - https://blog.jooq.org/how-to-write-efficient-top-n-queries-in-sql/
+
+    - DTO projections : https://blog.jooq.org/the-second-best-way-to-fetch-a-spring-data-jpa-dto-projection/
+    
+ - Blaze Persistence – The Best Way to Write JPA Criteria Queries
+      - https://persistence.blazebit.com/documentation/1.6/core/manual/en_US/index.html
+      - https://vladmihalcea.com/blaze-persistence-jpa-criteria-queries/
+      
+ - SQL RANK functions: https://www.sqlshack.com/overview-of-sql-rank-functions/
+ - WINDOW functions:   https://docs.snowflake.com/en/sql-reference/functions-analytic.html
+   
+    
+    
+    ### 🌀 WSL 2
+    https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
