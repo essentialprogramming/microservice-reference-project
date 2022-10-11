@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MetricsFilter implements ContainerRequestFilter {
 
-    private static final String METRIC_KEY = "counter";
+    private static final String METRIC_KEY = "counter.request";
 
     private static final Map<String, Counter> counters = new ConcurrentHashMap<>();
 
