@@ -13,6 +13,7 @@ import io.micrometer.datadog.DatadogConfig;
 import io.micrometer.datadog.DatadogMeterRegistry;
 import io.micrometer.jmx.JmxConfig;
 import io.micrometer.jmx.JmxMeterRegistry;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.time.Duration;
 
 @Configuration
+@Slf4j
 public class MicrometerConfig {
     private static final String DECRYPTION_KEY = "supercalifragilisticexpialidocious";
 
@@ -27,9 +29,9 @@ public class MicrometerConfig {
     public MeterRegistry meterRegistry() {
 
         final CompositeMeterRegistry compositeRegistry = new CompositeMeterRegistry();
-        final SimpleMeterRegistry oneSimpleMeter = new SimpleMeterRegistry();
+        final MeterRegistry oneSimpleMeter = new SimpleMeterRegistry();
         final MeterRegistry jmxRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
-        final DatadogMeterRegistry datadogMeterRegistry = new DatadogMeterRegistry(configureDatadog(), Clock.SYSTEM);
+        final MeterRegistry datadogMeterRegistry = new DatadogMeterRegistry(configureDatadog(), Clock.SYSTEM);
 
         compositeRegistry.add(oneSimpleMeter);
         compositeRegistry.add(jmxRegistry);
@@ -85,14 +87,19 @@ public class MicrometerConfig {
         };
     }
 
-    private static String decryptKey(AppResources appResources) {
+    private static String decryptKey(final AppResources appResources) {
         try {
             return Crypt.decrypt(appResources.value(), DECRYPTION_KEY);
         } catch (GeneralSecurityException e) {
-
-            if (appResources.equals(AppResources.DATADOG_API_KEY)) {
+            if (AppResources.DATADOG_API_KEY.equals(appResources)) {
+                log.error(ErrorCode.UNABLE_TO_DECRYPT_API_KEY.getCode(), ErrorCode.UNABLE_TO_DECRYPT_API_KEY.getDescription());
                 throw new ServiceException(ErrorCode.UNABLE_TO_DECRYPT_API_KEY, e);
-            } else throw new ServiceException(ErrorCode.UNABLE_TO_DECRYPT_APPLICATION_KEY, e);
+            }
+            if (AppResources.DATADOG_APPLICATION_KEY.equals(appResources)) {
+                log.error(ErrorCode.UNABLE_TO_DECRYPT_APPLICATION_KEY.getCode(), ErrorCode.UNABLE_TO_DECRYPT_APPLICATION_KEY.getDescription());
+                throw new ServiceException(ErrorCode.UNABLE_TO_DECRYPT_APPLICATION_KEY, e);
+            }
+            throw new RuntimeException("Wrong argument provided", e);
         }
     }
 }

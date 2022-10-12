@@ -28,7 +28,7 @@ public class MetricsFilter implements ContainerRequestFilter {
 
         counters.put(fullMethodName, Counter
                 .builder(METRIC_KEY + "." + controllerName + "." + methodName)
-                .description("count of endpoint calls " + getHttpMethod(resourceInfo) + " : " + endpointPath)
+                .description("counter of API requests " + getHttpMethod(resourceInfo) + " : " + endpointPath)
                 .register(meterRegistry));
     }
 
