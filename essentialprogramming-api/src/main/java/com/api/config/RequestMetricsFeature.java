@@ -1,5 +1,6 @@
 package com.api.config;
 
+import com.util.micrometer.RequestMetrics;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import javax.inject.Inject;
@@ -9,13 +10,13 @@ import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class MetricsFeature implements DynamicFeature {
+public class RequestMetricsFeature implements DynamicFeature {
 
     @Inject
-    private MeterRegistry meterRegistry;
+    private RequestMetrics requestMetrics;
 
-    public void setMeterRegistry(MeterRegistry meterRegistry) {
-        this.meterRegistry = meterRegistry;
+    public void setRequestMetrics(RequestMetrics requestMetrics) {
+        this.requestMetrics = requestMetrics;
     }
 
     @Override
@@ -24,7 +25,7 @@ public class MetricsFeature implements DynamicFeature {
         if (!resourceInfo.getResourceClass().getName().contains("Controller")) {
             return;
         }
-        context.register(new MetricsFilter(resourceInfo, meterRegistry));
+        context.register(new RequestMetricsFilter(resourceInfo, requestMetrics));
     }
 
 }

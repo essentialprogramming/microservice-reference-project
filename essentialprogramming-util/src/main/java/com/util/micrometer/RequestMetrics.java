@@ -1,24 +1,29 @@
-package com.api.config;
+package com.util.micrometer;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.glassfish.jersey.server.ContainerRequest;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MetricsFilter implements ContainerRequestFilter {
-
-    private static final String METRIC_KEY = "counter.request";
+@Component
+public class RequestMetrics {
 
     private static final Map<String, Counter> counters = new ConcurrentHashMap<>();
+    private static final String METRIC_KEY = "counter.request";
 
+    @Inject
+    private MeterRegistry meterRegistry;
 
-    public MetricsFilter(ResourceInfo resourceInfo, MeterRegistry meterRegistry) {
+    public void setMeterRegistry(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+    }
+
+    public void addMetric(ResourceInfo resourceInfo) {
 
         String controllerName = resourceInfo.getResourceClass().getSimpleName();
         String fullMethodName = resourceInfo.getResourceMethod().toGenericString();
@@ -31,22 +36,6 @@ public class MetricsFilter implements ContainerRequestFilter {
                 .description("counter of API requests " + getHttpMethod(resourceInfo) + " : " + endpointPath)
                 .register(meterRegistry));
     }
-
-    @Override
-    public void filter(final ContainerRequestContext requestContext) {
-
-        String methodName = ((ContainerRequest) requestContext)
-                .getUriInfo()
-                .getMatchedResourceMethod()
-                .getInvocable()
-                .getDefinitionMethod()
-                .toGenericString();
-
-        if (counters.containsKey(methodName)) {
-            counters.get(methodName).increment();
-        }
-    }
-
 
     private String getHttpMethod(ResourceInfo resourceInfo) {
 
@@ -65,5 +54,11 @@ public class MetricsFilter implements ContainerRequestFilter {
         } else if (resourceInfo.getResourceMethod().isAnnotationPresent(OPTIONS.class)) {
             return OPTIONS.class.getSimpleName();
         } else return "";
+    }
+
+    public void increment(String methodName) {
+        if (counters.containsKey(methodName)) {
+            counters.get(methodName).increment();
+        }
     }
 }

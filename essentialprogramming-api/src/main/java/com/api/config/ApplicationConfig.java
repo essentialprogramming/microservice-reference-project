@@ -45,7 +45,7 @@ public class ApplicationConfig extends ResourceConfig {
         register(SecurityFeature.class);
 
         //Initialize controller counters
-        register(MetricsFeature.class);
+        register(RequestMetricsFeature.class);
 
         register(UserController.class);
         register(WelcomeController.class);

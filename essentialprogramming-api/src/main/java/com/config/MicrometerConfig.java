@@ -1,7 +1,7 @@
 package com.config;
 
 import com.api.env.resources.AppResources;
-import com.api.exceptions.codes.ErrorCode;
+import com.config.exceptions.codes.ErrorCode;
 import com.crypto.Crypt;
 import com.util.exceptions.ServiceException;
 import io.micrometer.core.aop.TimedAspect;
