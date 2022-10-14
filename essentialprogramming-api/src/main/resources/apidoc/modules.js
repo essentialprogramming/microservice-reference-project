@@ -10,5 +10,9 @@ let apiEndpoints = [
     {
         url: '../v1/api/jobs/openapi',
         name: 'Jobs API'
+    },
+    {
+        url: '../v1/api/monitoring/openapi',
+        name: 'Monitoring API'
     }
 ];
