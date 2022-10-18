@@ -2,7 +2,7 @@
 
 This project is inspired by the idea to quickly create a production ready project with all the required infrastructure at low cost yet with important security measures in place and ability to quickly scale in order to ship a quality product to early adopters. Ideal for quickly starting an app to validate ideas and scale if needed. The implementation includes code samples for different features. It uses Spring as the framework of choice because it provides a nice set of convenience features when bootstrapping and plugging together the application.
 
-### 🌀 Prerequisites:
+ # :bookmark_tabs: Prerequisites:
 By default, the project uses JDK 8, but will also work with JDK 11 and above.
 
 * **JDK**
@@ -17,7 +17,7 @@ By default, the project uses JDK 8, but will also work with JDK 11 and above.
 
 
 ---------------
-### 🌀 Build and run
+# :bookmark: Build and run
 
 Build
 ---------------
@@ -64,7 +64,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     `mvn com.github.ferstl:depgraph-maven-plugin:3.3.0:graph -DrepeatTransitiveDependenciesInTextGraph -DshowVersions -DgraphFormat=text -DshowGroupIds -DshowConflicts -DshowDuplicates`
     
    
-### 🌀 JPA (Hibernate) 
+# :mortar_board: Learning Resources JPA (Hibernate) 
   - JPA(Hibernate) limits: [Is your query too complex for JPA and Hibernate ?](https://thorben-janssen.com/query-complex-jpa-hibernate/#1_Use_subqueries_outside_of_WHERE_and_HAVING_clauses)
   - Native Queries
     - Defining and executing native queries
@@ -101,8 +101,12 @@ Visit `localhost:8080/apidoc` to see the endpoints.
    
     
     
+### :nut_and_bolt: Utilities
+    
     ### 🌀 WSL 2
     https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
     
     ### 🌀 Java Decompiler
     http://java-decompiler.github.io/
+    
+ 
