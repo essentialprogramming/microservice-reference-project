@@ -55,7 +55,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 - Verify that annotation processing is enabled in Intellij (`File` -> `Settings` -> `Build, Execution, and Deployment`
   -> `Compiler` -> `Annotation Processers`)
   
-### 🌀 Usefull commands
+## :sunglasses: Usefull commands
     `mvn dependency:tree`
  
     `mvn dependency:tree -Dincludes=net.minidev:json-smart` //Filter the dependency tree
@@ -109,4 +109,6 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     ### 🌀 Java Decompiler
     http://java-decompiler.github.io/
     
+    
+[:top: Back to Top]
  
