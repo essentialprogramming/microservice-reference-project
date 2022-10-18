@@ -103,3 +103,6 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
     ### 🌀 WSL 2
     https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
+    
+    ### 🌀 Java Decompiler
+    http://java-decompiler.github.io/
