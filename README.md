@@ -81,7 +81,9 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
     
   - JOOQ
-    - JAVA, SQL AND JOOQ: https://blog.jooq.org/why-you-should-use-jooq-with-code-generation/
+    - JAVA, SQL AND JOOQ:
+       - https://blog.jooq.org/why-you-should-use-jooq-with-code-generation/
+       - https://blog.jooq.org/using-testcontainers-to-generate-jooq-code/
     - Hibernate & JOOQ interation: 
        -  https://thorben-janssen.com/hibernate-jooq-a-match-made-in-heaven/ 
        -  https://thorben-janssen.com/hibernate-tip-how-to-integrate-an-external-query-builder/                
