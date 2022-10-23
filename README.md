@@ -102,9 +102,11 @@ Visit `localhost:8080/apidoc` to see the endpoints.
  - SQL RANK functions: https://www.sqlshack.com/overview-of-sql-rank-functions/
  - WINDOW functions:   https://docs.snowflake.com/en/sql-reference/functions-analytic.html
    
+## :page_with_curl: Data versioning 
+  - Data versioning: https://blog.devgenius.io/what-is-data-versioning-and-3-ways-to-implement-it-4b6377bbdf93
+  - SQL Strategies for ‘Versioned’ Data: https://www.red-gate.com/simple-talk/databases/sql-server/database-administration-sql-server/sql-strategies-for-versioned-data/
     
-    
-### :nut_and_bolt: Utilities
+## :nut_and_bolt: Utilities
     
     ### 🌀 WSL 2
     https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
