@@ -81,6 +81,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
     
   - JOOQ
+    - Wiki: https://en.wikipedia.org/wiki/JOOQ_Object_Oriented_Querying
     - Java, SQL and JOOQ:
        - https://blog.jooq.org/why-you-should-use-jooq-with-code-generation/
        - https://blog.jooq.org/using-testcontainers-to-generate-jooq-code/
