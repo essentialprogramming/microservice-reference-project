@@ -85,6 +85,7 @@ Visit `localhost:8080/apidoc` to see the endpoints.
       - https://en.wikipedia.org/wiki/JOOQ_Object_Oriented_Querying
       - https://www.marcobehler.com/guides/jooq
       - https://thorben-janssen.com/getting-started-with-jooq/
+      - https://www.jooq.org/doc/latest/manual/sql-building/sql-statements/select-statement/
     - Java, SQL and JOOQ:
        - https://blog.jooq.org/why-you-should-use-jooq-with-code-generation/
        - https://blog.jooq.org/using-testcontainers-to-generate-jooq-code/
