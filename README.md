@@ -81,9 +81,10 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
     
   - JOOQ
-    - Wiki: 
+    - Getting started: 
       - https://en.wikipedia.org/wiki/JOOQ_Object_Oriented_Querying
       - https://www.marcobehler.com/guides/jooq
+      - https://thorben-janssen.com/getting-started-with-jooq/
     - Java, SQL and JOOQ:
        - https://blog.jooq.org/why-you-should-use-jooq-with-code-generation/
        - https://blog.jooq.org/using-testcontainers-to-generate-jooq-code/
