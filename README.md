@@ -109,7 +109,9 @@ Visit `localhost:8080/apidoc` to see the endpoints.
    
 ## :page_with_curl: Data versioning 
   - Data versioning: https://blog.devgenius.io/what-is-data-versioning-and-3-ways-to-implement-it-4b6377bbdf93
-  - Data versioning, the Kimball approach: https://en.wikipedia.org/wiki/Slowly_changing_dimension
+  - Data versioning, the Kimball approach: 
+     - https://www.holistics.io/books/setup-analytics/kimball-s-dimensional-data-modeling/
+     - https://en.wikipedia.org/wiki/Slowly_changing_dimension
   - SQL Strategies for ‘Versioned’ Data: https://www.red-gate.com/simple-talk/databases/sql-server/database-administration-sql-server/sql-strategies-for-versioned-data/
     
 ## :nut_and_bolt: Utilities
