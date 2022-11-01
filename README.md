@@ -122,6 +122,9 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     ### 🌀 Java Decompiler
     http://java-decompiler.github.io/
     
+    ### 🌀 JWT Decoder, Verifier, Generator, Decryptor
+    https://dinochiesa.github.io/jwt/
+    
     
 [:top: Back to Top](#microservice-reference-project)
  
