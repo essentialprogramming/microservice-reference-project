@@ -114,16 +114,13 @@ Visit `localhost:8080/apidoc` to see the endpoints.
      - https://en.wikipedia.org/wiki/Slowly_changing_dimension
   - SQL Strategies for ‘Versioned’ Data: https://www.red-gate.com/simple-talk/databases/sql-server/database-administration-sql-server/sql-strategies-for-versioned-data/
     
-## :nut_and_bolt: Utilities
+# :nut_and_bolt: Utilities
     
-    ### 🌀 WSL 2
-    https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
+  - 🌀 WSL 2: https://www.freecodecamp.org/news/how-to-install-wsl2-windows-subsystem-for-linux-2-on-windows-10/
     
-    ### 🌀 Java Decompiler
-    http://java-decompiler.github.io/
+  - 🌀 Java Decompiler: http://java-decompiler.github.io/
     
-    ### 🌀 JWT Decoder, Verifier, Generator, Decryptor
-    https://dinochiesa.github.io/jwt/
+  - 🌀 JWT Decoder, Verifier, Generator, Decryptor:  https://dinochiesa.github.io/jwt/
     
     
 [:top: Back to Top](#microservice-reference-project)
