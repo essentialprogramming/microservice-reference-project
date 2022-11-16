@@ -44,6 +44,9 @@ public class ApplicationConfig extends ResourceConfig {
         //Validate JWT Token
         register(SecurityFeature.class);
 
+        //Initialize controller counters
+        register(RequestMetricsFeature.class);
+
         register(UserController.class);
         register(WelcomeController.class);
         register(PDFController.class);

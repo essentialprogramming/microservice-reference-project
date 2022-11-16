@@ -59,6 +59,29 @@ public class FileConfiguration implements Configuration {
         return property;
     }
 
+    @Override
+    public Long getPropertyAsLong(String key) {
+        if (this.getProperty(key) == null) return null;
+
+        final String value = this.properties.getProperty(key);
+        final long property;
+        try {
+            property = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            LOG.error("Property with key '" + key + "' and value '" + value + "' can not be converted to long" + ".");
+            throw new IllegalArgumentException("Property with key '" + key + "' and value '" + value + "' can not be converted to long" + ".", e);
+        }
+
+        return property;
+    }
+
+    @Override
+    public Boolean getPropertyAsBoolean(String key) {
+        if (this.getProperty(key) == null) return null;
+
+        final String value = this.properties.getProperty(key);
+        return Boolean.parseBoolean(value);
+    }
 
     @Override
     public void cleanProperties() {

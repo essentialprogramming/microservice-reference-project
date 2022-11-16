@@ -19,15 +19,30 @@
         <io.swagger.version>2.0.6</io.swagger.version>
         <com.fasterxml.jackson.version>2.12.5</com.fasterxml.jackson.version>
         <kotlin.version>1.3.10</kotlin.version>
-        <org.springframework.version>5.2.20.RELEASE</org.springframework.version>
+        <org.springframework.version>5.3.23</org.springframework.version>
         <org.spring-security.version>5.6.1</org.spring-security.version>
-        <org.spring-data.version>2.3.9.RELEASE</org.spring-data.version>
+        <org.spring-data.version>2.7.5</org.spring-data.version>
         <hibernate.version>5.6.9.Final</hibernate.version>
         <log4j.version>2.18.0</log4j.version>
     </properties>
 
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
 
         <!-- HikariCP -->
         <dependency>
@@ -151,6 +166,20 @@
             <version>${com.fasterxml.jackson.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${com.fasterxml.jackson.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${com.fasterxml.jackson.version}</version>
+        </dependency>
+
         <!-- Project lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -217,19 +246,7 @@
             <version>3.12.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.12.5</version>
-        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>2.12.5</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
@@ -255,6 +272,12 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-jmx</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-datadog</artifactId>
             <version>1.9.3</version>
         </dependency>
 

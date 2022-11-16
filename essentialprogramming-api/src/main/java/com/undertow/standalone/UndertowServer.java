@@ -89,6 +89,11 @@ public final class UndertowServer {
                                 .addMapping("/v1/api/jobs/*")
                                 .setLoadOnStartup(1)
                                 .setAsyncSupported(true),
+                        servlet("monitoringServlet", ServletContainer.class)
+                                .addInitParam("javax.ws.rs.Application", com.monitoring.config.ApplicationConfig.class.getName())
+                                .addMapping("/v1/api/monitoring/*")
+                                .setLoadOnStartup(1)
+                                .setAsyncSupported(true),
                         servlet("loginServlet", LoginServlet.class)
                                 .addMapping("/auth/sign-in/*")
                                 .setLoadOnStartup(1)

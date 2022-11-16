@@ -14,5 +14,9 @@ public interface Configuration {
 
     Integer getPropertyAsInteger(String key);
 
+    Long getPropertyAsLong(String key);
+
+    Boolean getPropertyAsBoolean(String key);
+
     void cleanProperties();
 }

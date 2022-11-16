@@ -18,6 +18,7 @@ import com.util.enums.HTTPCustomStatus;
 import com.util.exceptions.ApiException;
 import com.util.io.FileInputResource;
 import com.util.web.JsonResponse;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jboss.weld.util.collections.ImmutableMap;
@@ -34,9 +35,10 @@ import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.config.ClockConfig.UTC_CLOCK;
 import static com.config.ObjectMapperConfig.ObjectMapperProvider;
@@ -137,7 +139,7 @@ public class UserService {
         }
     }
 
-
+    @Timed(value = "timed.method")
     private User saveUser(User user, UserInput input, com.util.enums.Language language) {
 
         final String uuid = NanoIdUtils.randomNanoId();
@@ -154,6 +156,11 @@ public class UserService {
 
         logger.info("user saved userId={}", user.getId());
         return user;
+    }
+
+    @Transactional
+    public List<UserJSON> loadAllAsJSON() {
+        return userRepository.findAll().stream().map(UserMapper::userToJson).collect(Collectors.toList());
     }
 
     @Transactional
