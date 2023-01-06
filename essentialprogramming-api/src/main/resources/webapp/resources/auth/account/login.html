@@ -34,8 +34,10 @@
 <script>
 
     function getRequestParameter(parameterName){
-        if(parameterName = (new RegExp('[?&]' + encodeURIComponent(parameterName) + '=([^&]*)')).exec(location.search))
-            return decodeURIComponent(parameterName[1]);
+        let requestParam = (new RegExp('[?&]' + encodeURIComponent(parameterName) + '=([^&]*)')).exec(location.search);
+        if(requestParam)
+            return decodeURIComponent(requestParam[1]);
+        return '';
     }
 
     function login(event) {

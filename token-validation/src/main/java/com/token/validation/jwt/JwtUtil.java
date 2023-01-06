@@ -9,6 +9,7 @@ import com.token.validation.response.ValidationResponse;
 
 import java.io.IOException;
 import java.security.Key;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -62,7 +63,7 @@ public class JwtUtil {
             isSignatureValid = signatureVerifier.verify(jwtToken, key);
             claims = jwtToken.getClaims();
 
-            final Instant now = Instant.now();
+            final Instant now = Instant.now(Clock.systemUTC());
             long secondsSinceEpoch = OffsetDateTime.ofInstant(now, ZoneOffset.UTC).toEpochSecond(); //Legacy: long secondsSinceEpoch = Date.from(now).getTime() / 1000L;
 
             isExpired = (secondsSinceEpoch >= claims.getExpiration());

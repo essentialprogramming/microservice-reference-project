@@ -1,7 +1,6 @@
 package com.api.controller;
 
 import com.api.config.Anonymous;
-import com.api.exceptions.codes.ErrorCode;
 import com.api.model.UserInput;
 import com.api.output.UserJSON;
 import com.api.security.AllowUserIf;
@@ -140,14 +139,15 @@ public class UserController {
     @Anonymous
     public void loadAll(@HeaderParam("Authorization") String authorization, @Suspended AsyncResponse asyncResponse) {
 
-        Timer timerExample = Timer
+        final Timer timer = Timer
                 .builder("timer.load.users")
                 .description("measures the time taken to load all users")
                 .register(meterRegistry);
-        Callable<List<UserJSON>> findAllUsersTimed = timerExample.wrap((Callable<List<UserJSON>>) this::findAllUsers);
+        final Callable<List<UserJSON>> findAllUsers = timer
+                .wrap((Callable<List<UserJSON>>) this::findAllUsers);
 
         final ExecutorService executorService = ExecutorsProvider.getExecutorService();
-        Computation.computeAsync(findAllUsersTimed, executorService)
+        Computation.computeAsync(findAllUsers, executorService)
                 .thenApplyAsync(json -> asyncResponse.resume(Response.ok(json).build()), executorService)
                 .exceptionally(error -> asyncResponse.resume(ExceptionHandler.handleException((CompletionException) error)));
     }

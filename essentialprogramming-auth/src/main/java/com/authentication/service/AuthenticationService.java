@@ -110,14 +110,13 @@ public class AuthenticationService {
     }
 
     private AccessToken getAccessToken(LocalDateTime now, LocalDateTime expirationTime, Map<String, String> privateClaimMap, Map<String, String[]> privateClaimTypeAndStringArray, boolean active, String email) {
-        long expiresIn = ChronoUnit.MINUTES.between(now, expirationTime);
+        long expiresIn = ChronoUnit.SECONDS.between(now, expirationTime);
         return AccessToken.builder()
                 .accessToken(tokenService.generateJwtToken(expiresIn, privateClaimMap, privateClaimTypeAndStringArray))
                 .tokenType(OAuth2Constants.BEARER_TYPE)
                 .active(active)
                 .refreshToken(tokenService.getRefreshToken(email))
                 .expireAt(DateUtil.convertToDateViaSqlDate(expirationTime.toLocalDate()))
-                .expiresIn(Period.between(now.toLocalDate(), expirationTime.toLocalDate()).getDays())
                 .expiresIn(ChronoUnit.SECONDS.between(now, expirationTime))
                 .build();
     }
