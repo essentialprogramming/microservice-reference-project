@@ -37,6 +37,7 @@ public class ApplicationConfig extends ResourceConfig {
         register(CorsFilter.class);
 
         //JSON Conversions
+        register(JacksonObjectMapperProvider.class);
         register(JacksonJaxbJsonProvider.class);
 
         //Needed for upload
