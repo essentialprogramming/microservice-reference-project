@@ -5,6 +5,7 @@ import com.api.controller.JobController;
 import com.exception.BeanValidationExceptionHandler;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.util.enums.Language;
+import io.swagger.v3.jaxrs2.integration.JaxrsApplicationScanner;
 import io.swagger.v3.jaxrs2.integration.resources.AcceptHeaderOpenApiResource;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.Components;
@@ -57,11 +58,15 @@ public class ApplicationConfig extends ResourceConfig {
                 );
 
         SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+                .readAllResources(false)
+                .scannerClass(JaxrsApplicationScanner.class.getName())
                 .openAPI(openAPI)
                 .prettyPrint(true);
 
         AcceptHeaderOpenApiResource openApiResource = new AcceptHeaderOpenApiResource();
         openApiResource.setOpenApiConfiguration(oasConfig);
+
+        // register resources ✅
         register(openApiResource);
     }
 
