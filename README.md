@@ -126,39 +126,6 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 [:top: Back to Top](#microservice-reference-project)
 
 
-Synthetic monitoring is about proactively simulating user visits, regardless of whether or not real users are currently visiting your site
-
-Types of synthetic monitors
-Synthetic monitoring gives you the option of creating two kinds of monitors
-A single-URL browser monitor is the equivalent of a simulated user visiting your application using a web browser. 
-Single-URL browser monitors conduct availability tests of a single page of your website or web application.
-
-HTTP monitors represent simple HTTP requests. You can use them to monitor the availability of your API endpoints or perform simple HTTP checks for single-resource availability
-
-How to configure monitor details:
-
-Name: A descriptive name for the monitor.
-URL: The target URL or endpoint to monitor.
-Frequency: How often the monitor should run (e.g., every 5 minutes).
-Locations: Choose the geographic locations from which you want to run the tests. Dynatrace provides a global network of locations.
-Advanced Settings: Depending on the monitor type, you can configure various advanced settings related to alerting, thresholds, and authentication.
-Script Configuration (For Browser Monitors):
-
-If you're setting up a browser monitor, you may need to create a script that defines the user interactions you want to simulate. Dynatrace provides a visual scripting editor that allows you to build scripts without coding.
-
-Synthetic monitors API - POST a monitor
-
-https://www.dynatrace.com/support/help/dynatrace-api/environment-api/synthetic/synthetic-monitors/post-a-monitor
-URL creation: https://{your-domain}/e/{your-environment-id}/api/v1/synthetic/monitors
-
-Creating a monitor using the Dynatrace API:
-Obtain API Token or API Key:
-
-1. Before using the API, obtain an API token or API key for your Dynatrace environment. 
-2. Identify the API Endpoint: Determine the specific API endpoint and endpoint path that you need to access to create a monitor. 
-3. HTTP POST Request:
-Prepare a JSON object that contains the configuration details for the monitor you want to create. The structure and content of this JSON object will vary based on the monitor type (e.g., browser, HTTP, ping) and the specific properties you want to set.
-
 Use the chosen HTTP client to send an HTTP POST request to the API endpoint for monitor creation.
 Include the API token or API key in the request headers for authentication.
 Pass the JSON configuration object in the request body.
