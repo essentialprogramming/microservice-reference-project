@@ -126,9 +126,4 @@ Visit `localhost:8080/apidoc` to see the endpoints.
 [:top: Back to Top](#microservice-reference-project)
 
 
-Use the chosen HTTP client to send an HTTP POST request to the API endpoint for monitor creation.
-Include the API token or API key in the request headers for authentication.
-Pass the JSON configuration object in the request body.
-
-Upon successfully sending the POST request, the Dynatrace API will respond with the result of the request, which includes the monitor's unique identifier (e.g., entityId) if the creation was successful.
  
