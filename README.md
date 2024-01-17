@@ -122,6 +122,13 @@ Visit `localhost:8080/apidoc` to see the endpoints.
     
   - 🌀 JWT Decoder, Verifier, Generator, Decryptor:  https://dinochiesa.github.io/jwt/
     
+
+# :nut_and_bolt: Git cleanup commands(Nothing needs to be replaced in these commands)
+   - git update-ref -d refs/original/refs/remotes/origin/master
+   - git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin
+   - git reflog expire --expire=now --all
+  - git gc --aggressive --prune=now
+    
     
 [:top: Back to Top](#microservice-reference-project)
 
