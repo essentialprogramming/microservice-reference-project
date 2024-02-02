@@ -128,7 +128,10 @@ Visit `localhost:8080/apidoc` to see the endpoints.
    - git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin
    - git reflog expire --expire=now --all
   - git gc --aggressive --prune=now
+
+# :nut_and_bolt: Deployment
     
+  - 🌀 How To Secure Nginx with Let's Encrypt: https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04   
     
 [:top: Back to Top](#microservice-reference-project)
 
